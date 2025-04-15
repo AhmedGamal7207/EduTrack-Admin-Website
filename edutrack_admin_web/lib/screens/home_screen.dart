@@ -38,6 +38,17 @@ class _HomeScreenState extends State<HomeScreen> {
   Widget build(BuildContext context) {
     final isDesktop = Responsive.isDesktop(context);
     return Scaffold(
+      drawer:
+          !isDesktop
+              ? SizedBox(
+                width: 250,
+                child: SideMenuWidget(
+                  selectedIndex: selectedIndex,
+                  onItemTap: handleMenuTap,
+                  screenWidth: MediaQuery.of(context).size.width,
+                ),
+              )
+              : null,
       body: SafeArea(
         child: Row(
           children: [

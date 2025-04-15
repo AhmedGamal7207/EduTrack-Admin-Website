@@ -1,3 +1,4 @@
+import 'package:edutrack_admin_web/widgets/header_widget.dart';
 import 'package:flutter/material.dart';
 
 class SubjectsScreen extends StatelessWidget {
@@ -5,6 +6,9 @@ class SubjectsScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Center(child: Text("Subjects"));
+    return Padding(
+      padding: const EdgeInsets.all(40),
+      child: Column(children: [HeaderWidget(headerTitle: "Subjects")]),
+    );
   }
 }

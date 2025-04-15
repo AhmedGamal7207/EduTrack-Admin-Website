@@ -1,3 +1,4 @@
+import 'package:edutrack_admin_web/widgets/header_widget.dart';
 import 'package:flutter/material.dart';
 
 class ScheduleScreen extends StatelessWidget {
@@ -5,6 +6,9 @@ class ScheduleScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Center(child: Text("Schedule"));
+    return Padding(
+      padding: const EdgeInsets.all(40),
+      child: Column(children: [HeaderWidget(headerTitle: "Schedule")]),
+    );
   }
 }

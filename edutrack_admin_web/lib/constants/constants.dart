@@ -38,4 +38,19 @@ class Constants {
     fontStyle: style,
     letterSpacing: letterSpacing,
   );
+
+  static TextStyle mainHeading = Constants.poppinsFont(
+    Constants.poppinsBold,
+    26,
+    Constants.primaryColor,
+  );
+
+  static TextStyle subHeading = Constants.poppinsFont(
+    Constants.poppinsBold,
+    20,
+    Constants.primaryColor,
+  );
+
+  static const double internalSpacing = 40;
+  static const double pagePadding = 40;
 }
