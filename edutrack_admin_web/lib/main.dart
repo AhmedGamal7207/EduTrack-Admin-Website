@@ -1,5 +1,5 @@
 import 'package:edutrack_admin_web/constants/constants.dart';
-import 'package:edutrack_admin_web/screens/main_screen.dart';
+import 'package:edutrack_admin_web/screens/home_screen.dart';
 import 'package:flutter/material.dart';
 
 void main() {
@@ -14,12 +14,19 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return MaterialApp(
       title: "EduTrack Website",
+      builder: (context, child) {
+        return LayoutBuilder(
+          builder: (context, constraints) {
+            return child!;
+          },
+        );
+      },
       debugShowCheckedModeBanner: false,
       theme: ThemeData(
         scaffoldBackgroundColor: Constants.bgColor,
         brightness: Brightness.light,
       ),
-      home: const MainScreen(),
+      home: const HomeScreen(),
     );
   }
 }
