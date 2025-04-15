@@ -1,4 +1,4 @@
-import 'package:edutrack_admin_web/models/menu_models.dart';
+import 'package:edutrack_admin_web/models/menu_model.dart';
 
 class SideMenuData {
   final menu = <MenuModel>[
