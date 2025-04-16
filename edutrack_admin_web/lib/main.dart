@@ -29,11 +29,11 @@ class MyApp extends StatelessWidget {
       ),
       home:
           Responsive.isMobile(context)
-              ? HomeScreen()
+              ? HomeScreen(selectedIndex: 0)
               : SelectableRegion(
                 focusNode: FocusNode(),
                 selectionControls: materialTextSelectionControls,
-                child: HomeScreen(),
+                child: HomeScreen(selectedIndex: 0),
               ),
     );
   }

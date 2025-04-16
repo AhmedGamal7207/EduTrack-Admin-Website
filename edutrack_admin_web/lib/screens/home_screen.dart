@@ -10,15 +10,17 @@ import 'package:edutrack_admin_web/widgets/navigation%20menu/side_menu_widget.da
 import 'package:edutrack_admin_web/util/responsive.dart';
 import 'package:flutter/material.dart';
 
+// ignore: must_be_immutable
 class HomeScreen extends StatefulWidget {
-  const HomeScreen({super.key});
+  Widget? subScreen;
+  int selectedIndex;
+  HomeScreen({super.key, required this.selectedIndex, this.subScreen});
 
   @override
   State<HomeScreen> createState() => _HomeScreenState();
 }
 
 class _HomeScreenState extends State<HomeScreen> {
-  int selectedIndex = 0;
   List<Widget> screens = [
     DashboardScreen(),
     ClassesScreen(),
@@ -31,7 +33,8 @@ class _HomeScreenState extends State<HomeScreen> {
 
   void handleMenuTap(int index) {
     setState(() {
-      selectedIndex = index;
+      widget.selectedIndex = index;
+      widget.subScreen = null;
     });
   }
 
@@ -44,7 +47,7 @@ class _HomeScreenState extends State<HomeScreen> {
               ? SizedBox(
                 width: 250,
                 child: SideMenuWidget(
-                  selectedIndex: selectedIndex,
+                  selectedIndex: widget.selectedIndex,
                   onItemTap: handleMenuTap,
                   screenWidth: MediaQuery.of(context).size.width,
                 ),
@@ -61,7 +64,7 @@ class _HomeScreenState extends State<HomeScreen> {
                       ? Expanded(
                         flex: 2,
                         child: SideMenuWidget(
-                          selectedIndex: selectedIndex,
+                          selectedIndex: widget.selectedIndex,
                           onItemTap: handleMenuTap,
                           screenWidth: MediaQuery.of(context).size.width,
                         ),
@@ -69,7 +72,9 @@ class _HomeScreenState extends State<HomeScreen> {
                       : const SizedBox.shrink();
                 },
               ),
-            Expanded(flex: 10, child: screens[selectedIndex]),
+            widget.subScreen != null
+                ? Expanded(flex: 10, child: widget.subScreen!)
+                : Expanded(flex: 10, child: screens[widget.selectedIndex]),
           ],
         ),
       ),

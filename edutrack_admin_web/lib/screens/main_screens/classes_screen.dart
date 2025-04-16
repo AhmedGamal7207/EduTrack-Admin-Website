@@ -1,4 +1,6 @@
 import 'package:edutrack_admin_web/constants/constants.dart';
+import 'package:edutrack_admin_web/screens/home_screen.dart';
+import 'package:edutrack_admin_web/screens/main_screens/grade_classes_screen.dart';
 import 'package:edutrack_admin_web/widgets/clickable_card_widget.dart';
 import 'package:edutrack_admin_web/widgets/white_container_widget.dart';
 import 'package:edutrack_admin_web/widgets/header_widget.dart';
@@ -28,7 +30,20 @@ class ClassesScreen extends StatelessWidget {
                     (index) => ClickableCard(
                       cardTitle: "Grade ${index + 1}",
                       buttonText: "Show Classes",
-                      onTap: () {},
+                      onTap: () {
+                        Navigator.pushReplacement(
+                          context,
+                          MaterialPageRoute(
+                            builder:
+                                (context) => HomeScreen(
+                                  subScreen: GradeClassesScreen(
+                                    gradeNumber: "${index + 1}",
+                                  ),
+                                  selectedIndex: 1,
+                                ),
+                          ),
+                        );
+                      },
                     ),
                   ),
                 ),
