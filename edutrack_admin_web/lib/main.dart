@@ -1,5 +1,6 @@
 import 'package:edutrack_admin_web/constants/constants.dart';
 import 'package:edutrack_admin_web/screens/home_screen.dart';
+import 'package:edutrack_admin_web/util/responsive.dart';
 import 'package:flutter/material.dart';
 
 void main() {
@@ -26,7 +27,14 @@ class MyApp extends StatelessWidget {
         scaffoldBackgroundColor: Constants.bgColor,
         brightness: Brightness.light,
       ),
-      home: const HomeScreen(),
+      home:
+          Responsive.isMobile(context)
+              ? HomeScreen()
+              : SelectableRegion(
+                focusNode: FocusNode(),
+                selectionControls: materialTextSelectionControls,
+                child: HomeScreen(),
+              ),
     );
   }
 }

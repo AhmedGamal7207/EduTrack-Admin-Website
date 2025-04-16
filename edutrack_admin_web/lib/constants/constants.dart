@@ -8,6 +8,8 @@ class Constants {
   static const Color tableHeaderColor = Color(0x1A379EAB);
   static const Color cardBackgroundColor = Color(0xFF379EAB);
   static const Color separatorColor = Color(0x4D8F8F8F);
+  static const Color clickableCardColor = Color(0x80379EAB);
+  static const Color hoverColor = Color(0xFF37AB7E);
 
   static const Color orangeColor = Color(0xFFFB7D5B);
   static const Color yellowColor = Color(0xFFFCC43E);
@@ -19,10 +21,10 @@ class Constants {
   static const Color blackColor = Colors.black;
 
   // Font Weights
-  static const FontWeight poppinsLight = FontWeight.w100;
-  static const FontWeight poppinsRegular = FontWeight.w400;
-  static const FontWeight poppinsMedium = FontWeight.w500;
-  static const FontWeight poppinsBold = FontWeight.w700;
+  static const FontWeight weightLight = FontWeight.w100;
+  static const FontWeight weightRegular = FontWeight.w400;
+  static const FontWeight weightMedium = FontWeight.w500;
+  static const FontWeight weightBold = FontWeight.w700;
 
   // Text Styles
   static TextStyle poppinsFont(
@@ -40,15 +42,42 @@ class Constants {
     letterSpacing: letterSpacing,
   );
 
-  static TextStyle mainHeading = Constants.poppinsFont(
-    Constants.poppinsBold,
+  static TextStyle rubikFont(
+    FontWeight rubikWeight,
+    double size,
+    Color color, [
+    FontStyle? style,
+    double? letterSpacing,
+  ]) => TextStyle(
+    fontFamily: 'Rubik',
+    fontWeight: rubikWeight,
+    fontSize: size,
+    color: color,
+    fontStyle: style,
+    letterSpacing: letterSpacing,
+  );
+
+  static TextStyle mainHeadingStyle = Constants.poppinsFont(
+    Constants.weightBold,
     26,
     Constants.primaryColor,
   );
 
-  static TextStyle subHeading = Constants.poppinsFont(
-    Constants.poppinsBold,
+  static TextStyle subHeadingStyle = Constants.poppinsFont(
+    Constants.weightBold,
     20,
+    Constants.primaryColor,
+  );
+
+  static TextStyle cardTitleStyle = Constants.poppinsFont(
+    Constants.weightMedium,
+    28,
+    Constants.whiteColor,
+  );
+
+  static TextStyle buttonTextStyle = Constants.rubikFont(
+    Constants.weightMedium,
+    14,
     Constants.primaryColor,
   );
 

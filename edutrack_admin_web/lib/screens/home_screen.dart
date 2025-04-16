@@ -5,7 +5,8 @@ import 'package:edutrack_admin_web/screens/main_screens/schedule_screen.dart';
 import 'package:edutrack_admin_web/screens/main_screens/students_screen.dart';
 import 'package:edutrack_admin_web/screens/main_screens/subjects.dart';
 import 'package:edutrack_admin_web/screens/main_screens/teachers_screen.dart';
-import 'package:edutrack_admin_web/widgets/side_menu_widget.dart';
+import 'package:edutrack_admin_web/util/notifiers.dart';
+import 'package:edutrack_admin_web/widgets/navigation%20menu/side_menu_widget.dart';
 import 'package:edutrack_admin_web/util/responsive.dart';
 import 'package:flutter/material.dart';
 
@@ -53,13 +54,20 @@ class _HomeScreenState extends State<HomeScreen> {
         child: Row(
           children: [
             if (isDesktop)
-              Expanded(
-                flex: 2,
-                child: SideMenuWidget(
-                  selectedIndex: selectedIndex,
-                  onItemTap: handleMenuTap,
-                  screenWidth: MediaQuery.of(context).size.width,
-                ),
+              ValueListenableBuilder(
+                valueListenable: NavController.isMenuOpen,
+                builder: (context, isOpen, _) {
+                  return isOpen
+                      ? Expanded(
+                        flex: 2,
+                        child: SideMenuWidget(
+                          selectedIndex: selectedIndex,
+                          onItemTap: handleMenuTap,
+                          screenWidth: MediaQuery.of(context).size.width,
+                        ),
+                      )
+                      : const SizedBox.shrink();
+                },
               ),
             Expanded(flex: 10, child: screens[selectedIndex]),
           ],

@@ -2,7 +2,7 @@ import 'package:edutrack_admin_web/constants/constants.dart';
 import 'package:edutrack_admin_web/data/line_chart_data.dart';
 import 'package:edutrack_admin_web/data/stats_data.dart';
 import 'package:edutrack_admin_web/data/table_data.dart';
-import 'package:edutrack_admin_web/widgets/custom_card_widget.dart';
+import 'package:edutrack_admin_web/widgets/white_container_widget.dart';
 import 'package:edutrack_admin_web/widgets/header_widget.dart';
 import 'package:edutrack_admin_web/widgets/line_chart_widget.dart';
 import 'package:edutrack_admin_web/widgets/stats_card_widget.dart';
@@ -49,7 +49,7 @@ class DashboardScreen extends StatelessWidget {
               mainAxisSize: MainAxisSize.max,
               children: [
                 Expanded(
-                  child: CustomCard(
+                  child: WhiteContainer(
                     child: LineChartCard(
                       graphTitle: "Students Attendance",
                       data: AttendanceLineData(),
@@ -58,7 +58,7 @@ class DashboardScreen extends StatelessWidget {
                 ),
                 SizedBox(width: Constants.internalSpacing),
                 Expanded(
-                  child: CustomCard(
+                  child: WhiteContainer(
                     child: LineChartCard(
                       graphTitle: "Students Concentration",
                       data: ConcentrationLineData(),
@@ -68,7 +68,7 @@ class DashboardScreen extends StatelessWidget {
               ],
             ),
             SizedBox(height: Constants.internalSpacing),
-            CustomCard(child: TableWidget(data: TableData().warnings)),
+            WhiteContainer(child: TableWidget(data: TableData().warnings)),
           ],
         ),
       ),

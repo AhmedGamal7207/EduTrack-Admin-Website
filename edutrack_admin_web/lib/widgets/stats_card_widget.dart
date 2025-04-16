@@ -1,4 +1,4 @@
-import 'package:edutrack_admin_web/widgets/custom_card_widget.dart';
+import 'package:edutrack_admin_web/widgets/white_container_widget.dart';
 import 'package:flutter/material.dart';
 import 'package:edutrack_admin_web/constants/constants.dart';
 import 'package:edutrack_admin_web/models/stats_model.dart';
@@ -9,7 +9,7 @@ class StatCardWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return CustomCard(
+    return WhiteContainer(
       padding: const EdgeInsets.symmetric(vertical: 15, horizontal: 10),
       child: Row(
         children: [
@@ -37,7 +37,7 @@ class StatCardWidget extends StatelessWidget {
               Text(
                 model.title,
                 style: Constants.poppinsFont(
-                  Constants.poppinsMedium,
+                  Constants.weightMedium,
                   14,
                   Colors.grey.shade600,
                 ),
@@ -46,7 +46,7 @@ class StatCardWidget extends StatelessWidget {
               Text(
                 model.value.toString(),
                 style: Constants.poppinsFont(
-                  Constants.poppinsBold,
+                  Constants.weightBold,
                   26,
                   Constants.primaryColor,
                 ),

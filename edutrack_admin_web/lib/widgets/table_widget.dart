@@ -18,7 +18,7 @@ class TableWidget extends StatelessWidget {
             child: Text(
               "Attendance Warnings",
               style: Constants.poppinsFont(
-                Constants.poppinsBold,
+                Constants.weightBold,
                 20,
                 Constants.primaryColor,
               ),
@@ -48,7 +48,7 @@ class TableWidget extends StatelessWidget {
                   child: Text(
                     "Name",
                     style: Constants.poppinsFont(
-                      Constants.poppinsRegular,
+                      Constants.weightRegular,
                       18,
                       Constants.primaryColor,
                     ),
@@ -59,7 +59,7 @@ class TableWidget extends StatelessWidget {
                   child: Text(
                     "ID",
                     style: Constants.poppinsFont(
-                      Constants.poppinsRegular,
+                      Constants.weightRegular,
                       18,
                       Constants.primaryColor,
                     ),
@@ -70,7 +70,7 @@ class TableWidget extends StatelessWidget {
                   child: Text(
                     "Grade",
                     style: Constants.poppinsFont(
-                      Constants.poppinsRegular,
+                      Constants.weightRegular,
                       18,
                       Constants.primaryColor,
                     ),
@@ -81,7 +81,7 @@ class TableWidget extends StatelessWidget {
                   child: Text(
                     "Class",
                     style: Constants.poppinsFont(
-                      Constants.poppinsRegular,
+                      Constants.weightRegular,
                       18,
                       Constants.primaryColor,
                     ),
@@ -92,7 +92,7 @@ class TableWidget extends StatelessWidget {
                   child: Text(
                     "Number of Absences",
                     style: Constants.poppinsFont(
-                      Constants.poppinsRegular,
+                      Constants.weightRegular,
                       18,
                       Constants.primaryColor,
                     ),
@@ -130,7 +130,7 @@ class TableWidget extends StatelessWidget {
                             entry.name,
                             overflow: TextOverflow.ellipsis,
                             style: Constants.poppinsFont(
-                              Constants.poppinsLight,
+                              Constants.weightLight,
                               18,
                               Constants.blackColor,
                             ),
@@ -147,7 +147,7 @@ class TableWidget extends StatelessWidget {
                     child: Text(
                       entry.id,
                       style: Constants.poppinsFont(
-                        Constants.poppinsLight,
+                        Constants.weightLight,
                         18,
                         Constants.blackColor,
                       ),
@@ -161,7 +161,7 @@ class TableWidget extends StatelessWidget {
                     child: Text(
                       entry.grade,
                       style: Constants.poppinsFont(
-                        Constants.poppinsLight,
+                        Constants.weightLight,
                         18,
                         Constants.blackColor,
                       ),
@@ -175,7 +175,7 @@ class TableWidget extends StatelessWidget {
                     child: Text(
                       entry.studentClass,
                       style: Constants.poppinsFont(
-                        Constants.poppinsLight,
+                        Constants.weightLight,
                         18,
                         Constants.blackColor,
                       ),
@@ -189,7 +189,7 @@ class TableWidget extends StatelessWidget {
                     child: Text(
                       entry.absences.toString(),
                       style: Constants.poppinsFont(
-                        Constants.poppinsLight,
+                        Constants.weightLight,
                         18,
                         Constants.blackColor,
                       ),

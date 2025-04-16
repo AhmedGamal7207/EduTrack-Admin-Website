@@ -1,5 +1,5 @@
 import 'package:edutrack_admin_web/constants/constants.dart';
-import 'package:edutrack_admin_web/widgets/custom_card_widget.dart';
+import 'package:edutrack_admin_web/widgets/white_container_widget.dart';
 import 'package:fl_chart/fl_chart.dart';
 import 'package:flutter/material.dart';
 
@@ -19,11 +19,13 @@ class LineChartCard extends StatefulWidget {
 class _LineChartCardState extends State<LineChartCard> {
   @override
   Widget build(BuildContext context) {
-    return CustomCard(
+    return WhiteContainer(
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Center(child: Text(widget.graphTitle, style: Constants.subHeading)),
+          Center(
+            child: Text(widget.graphTitle, style: Constants.subHeadingStyle),
+          ),
           SizedBox(height: 20),
           AspectRatio(
             aspectRatio: 16 / 7,

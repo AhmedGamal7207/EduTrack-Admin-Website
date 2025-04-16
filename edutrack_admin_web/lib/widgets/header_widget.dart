@@ -1,6 +1,7 @@
 import 'package:edutrack_admin_web/constants/constants.dart';
 import 'package:edutrack_admin_web/widgets/profile_frame_widget.dart';
 import 'package:flutter/material.dart';
+import 'package:edutrack_admin_web/util/notifiers.dart';
 
 class HeaderWidget extends StatelessWidget {
   final String headerTitle;
@@ -12,14 +13,19 @@ class HeaderWidget extends StatelessWidget {
       mainAxisAlignment: MainAxisAlignment.start,
       crossAxisAlignment: CrossAxisAlignment.center,
       children: [
-        Image.asset(
-          'assets/icons/Circled Menu.png',
-          width: 50,
-          height: 50,
-          color: Constants.primaryColor,
+        InkWell(
+          onTap: () {
+            NavController.isMenuOpen.value = !NavController.isMenuOpen.value;
+          },
+          child: Image.asset(
+            'assets/icons/Circled Menu.png',
+            width: 50,
+            height: 50,
+            color: Constants.primaryColor,
+          ),
         ),
         SizedBox(width: 20),
-        Text(headerTitle, style: Constants.mainHeading),
+        Text(headerTitle, style: Constants.mainHeadingStyle),
         Expanded(child: SizedBox()),
         ProfileFrame(
           imageUrl:
