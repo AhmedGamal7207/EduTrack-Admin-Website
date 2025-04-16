@@ -16,6 +16,7 @@ class Constants {
   static const Color redColor = Color(0xFFEC221F);
   static const Color greyColor = Color(0xFFE3E3E3);
   static const Color whiteColor = Color(0xFFFFFFFF);
+  static const Color blackColor = Colors.black;
 
   // Font Weights
   static const FontWeight poppinsLight = FontWeight.w100;

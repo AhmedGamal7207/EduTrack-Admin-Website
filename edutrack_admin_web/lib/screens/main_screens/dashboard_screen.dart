@@ -1,10 +1,12 @@
 import 'package:edutrack_admin_web/constants/constants.dart';
 import 'package:edutrack_admin_web/data/line_chart_data.dart';
 import 'package:edutrack_admin_web/data/stats_data.dart';
+import 'package:edutrack_admin_web/data/table_data.dart';
 import 'package:edutrack_admin_web/widgets/custom_card_widget.dart';
 import 'package:edutrack_admin_web/widgets/header_widget.dart';
 import 'package:edutrack_admin_web/widgets/line_chart_widget.dart';
 import 'package:edutrack_admin_web/widgets/stats_card_widget.dart';
+import 'package:edutrack_admin_web/widgets/table_widget.dart';
 import 'package:flutter/material.dart';
 
 class DashboardScreen extends StatelessWidget {
@@ -66,6 +68,7 @@ class DashboardScreen extends StatelessWidget {
               ],
             ),
             SizedBox(height: Constants.internalSpacing),
+            CustomCard(child: TableWidget(data: TableData().warnings)),
           ],
         ),
       ),
