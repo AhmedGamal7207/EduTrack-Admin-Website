@@ -1,23 +1,23 @@
 import 'package:flutter/material.dart';
 import 'package:edutrack_admin_web/constants/constants.dart';
 
-class CustomButton extends StatefulWidget {
+class WhiteButton extends StatefulWidget {
   final String text;
   final VoidCallback onTap;
 
-  const CustomButton({super.key, required this.text, required this.onTap});
+  const WhiteButton({super.key, required this.text, required this.onTap});
 
   @override
-  State<CustomButton> createState() => _CustomButtonState();
+  State<WhiteButton> createState() => _WhiteButtonState();
 }
 
-class _CustomButtonState extends State<CustomButton> {
+class _WhiteButtonState extends State<WhiteButton> {
   bool _isHovering = false;
 
   @override
   Widget build(BuildContext context) {
     return MouseRegion(
-      cursor: SystemMouseCursors.click,
+      cursor: SystemMouseCursors.click, // 🖱️ Hand cursor on hover
       onEnter: (_) => setState(() => _isHovering = true),
       onExit: (_) => setState(() => _isHovering = false),
       child: Material(
@@ -31,24 +31,29 @@ class _CustomButtonState extends State<CustomButton> {
             duration: const Duration(milliseconds: 150),
             padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 10),
             decoration: BoxDecoration(
-              color:
-                  _isHovering ? Constants.hoverColor : Constants.primaryColor,
+              color: _isHovering ? Constants.hoverColor : Colors.white,
               borderRadius: BorderRadius.circular(25),
             ),
             child: Row(
               mainAxisSize: MainAxisSize.min,
               children: [
                 Image.asset(
-                  'assets/icons/Add Icon.png',
+                  'assets/icons/Button Icon.png',
                   height: 20,
                   width: 20,
-                  color: Constants.whiteColor,
+                  color:
+                      _isHovering
+                          ? Constants.whiteColor
+                          : Constants.primaryColor,
                 ),
                 const SizedBox(width: 8),
                 Text(
                   widget.text,
                   style: TextStyle(
-                    color: Constants.whiteColor,
+                    color:
+                        _isHovering
+                            ? Constants.whiteColor
+                            : Constants.primaryColor,
                     fontWeight: FontWeight.w600,
                     fontSize: 14,
                   ),

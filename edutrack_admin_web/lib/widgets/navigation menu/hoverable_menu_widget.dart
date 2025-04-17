@@ -5,11 +5,11 @@ class HoverableMenuItem extends StatefulWidget {
   final Widget childWidget;
   final int index;
   const HoverableMenuItem({
-    Key? key,
+    super.key,
     required this.onItemTap,
     required this.index,
     required this.childWidget,
-  }) : super(key: key);
+  });
 
   @override
   _HoverableMenuItemState createState() => _HoverableMenuItemState();

@@ -1,16 +1,13 @@
 import 'package:edutrack_admin_web/constants/constants.dart';
-import 'package:edutrack_admin_web/widgets/white_button_widget.dart';
 import 'package:flutter/material.dart';
 
-class ClickableCard extends StatelessWidget {
+class InfoCard extends StatelessWidget {
   final String cardTitle;
-  final String buttonText;
-  final VoidCallback onTap;
-  const ClickableCard({
+  final String cardSubtitle;
+  const InfoCard({
     super.key,
     required this.cardTitle,
-    required this.buttonText,
-    required this.onTap,
+    required this.cardSubtitle,
   });
 
   @override
@@ -30,7 +27,7 @@ class ClickableCard extends StatelessWidget {
               children: [
                 Text(cardTitle, style: Constants.cardTitleStyle),
                 Spacer(),
-                WhiteButton(onTap: onTap, text: buttonText),
+                Text(cardSubtitle, style: Constants.cardTitleStyle),
               ],
             ),
           ),

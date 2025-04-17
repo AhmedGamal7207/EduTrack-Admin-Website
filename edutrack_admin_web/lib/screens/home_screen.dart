@@ -1,4 +1,4 @@
-import 'package:edutrack_admin_web/screens/main_screens/classes_screen.dart';
+import 'package:edutrack_admin_web/screens/classes_screens/classes_screen.dart';
 import 'package:edutrack_admin_web/screens/main_screens/dashboard_screen.dart';
 import 'package:edutrack_admin_web/screens/main_screens/inventory_screen.dart';
 import 'package:edutrack_admin_web/screens/main_screens/schedule_screen.dart';

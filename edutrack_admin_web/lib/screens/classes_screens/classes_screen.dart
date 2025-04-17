@@ -1,6 +1,6 @@
 import 'package:edutrack_admin_web/constants/constants.dart';
 import 'package:edutrack_admin_web/screens/home_screen.dart';
-import 'package:edutrack_admin_web/screens/main_screens/grade_classes_screen.dart';
+import 'package:edutrack_admin_web/screens/classes_screens/grade_classes_screen.dart';
 import 'package:edutrack_admin_web/widgets/clickable_card_widget.dart';
 import 'package:edutrack_admin_web/widgets/white_container_widget.dart';
 import 'package:edutrack_admin_web/widgets/header_widget.dart';

@@ -3,7 +3,7 @@ import 'dart:ui';
 class StatsModel {
   final String icon;
   final String title;
-  final int value;
+  final String value;
   final Color color;
 
   const StatsModel({

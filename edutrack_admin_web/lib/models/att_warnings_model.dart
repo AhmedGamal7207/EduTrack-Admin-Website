@@ -1,12 +1,12 @@
 // models/attendance_warning_model.dart
-class TableModel {
+class AttendanceWarningsTableModel {
   final String name;
   final String id;
   final String grade;
   final String studentClass;
   final int absences;
 
-  const TableModel({
+  const AttendanceWarningsTableModel({
     required this.name,
     required this.id,
     required this.grade,
