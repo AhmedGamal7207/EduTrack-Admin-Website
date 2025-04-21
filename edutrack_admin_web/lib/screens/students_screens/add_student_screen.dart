@@ -162,7 +162,6 @@ class _AddStudentScreenState extends State<AddStudentScreen> {
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  const SizedBox(height: 40),
                   Text("Parent Details", style: Constants.subHeadingStyle),
                   const SizedBox(height: 24),
                   Column(
