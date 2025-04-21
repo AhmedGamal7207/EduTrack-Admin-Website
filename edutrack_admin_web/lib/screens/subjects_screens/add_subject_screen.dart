@@ -8,7 +8,8 @@ import 'package:edutrack_admin_web/widgets/white_container_widget.dart';
 import 'package:flutter/material.dart';
 
 class AddSubjectScreen extends StatefulWidget {
-  const AddSubjectScreen({super.key});
+  final String gradeNumber;
+  const AddSubjectScreen({super.key, required this.gradeNumber});
 
   @override
   State<AddSubjectScreen> createState() => _AddSubjectScreenState();
@@ -22,7 +23,9 @@ class _AddSubjectScreenState extends State<AddSubjectScreen> {
       child: SingleChildScrollView(
         child: Column(
           children: [
-            HeaderWidget(headerTitle: "Add New Subject"),
+            HeaderWidget(
+              headerTitle: "Add New Subject - Grade ${widget.gradeNumber}",
+            ),
             const SizedBox(height: Constants.internalSpacing),
             WhiteContainer(
               padding: const EdgeInsets.all(24),

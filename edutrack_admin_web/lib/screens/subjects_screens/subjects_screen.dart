@@ -1,22 +1,22 @@
-import 'package:edutrack_admin_web/constants/constants.dart';
-import 'package:edutrack_admin_web/screens/home_screen.dart';
-import 'package:edutrack_admin_web/screens/classes_screens/grade_classes_screen.dart';
-import 'package:edutrack_admin_web/widgets/cards/clickable_card_widget.dart';
-import 'package:edutrack_admin_web/widgets/white_container_widget.dart';
+import 'package:edutrack_admin_web/screens/subjects_screens/add_subject_screen.dart';
 import 'package:edutrack_admin_web/widgets/headers/header_widget.dart';
 import 'package:flutter/material.dart';
+import 'package:edutrack_admin_web/constants/constants.dart';
+import 'package:edutrack_admin_web/screens/home_screen.dart';
+import 'package:edutrack_admin_web/widgets/cards/clickable_card_widget.dart';
+import 'package:edutrack_admin_web/widgets/white_container_widget.dart';
 
-class ClassesScreen extends StatelessWidget {
-  const ClassesScreen({super.key});
+class SubjectsScreen extends StatelessWidget {
+  const SubjectsScreen({super.key});
 
   @override
   Widget build(BuildContext context) {
     return Padding(
-      padding: const EdgeInsets.all(Constants.pagePadding),
+      padding: const EdgeInsets.all(40),
       child: SingleChildScrollView(
         child: Column(
           children: [
-            HeaderWidget(headerTitle: "Classes"),
+            HeaderWidget(headerTitle: "Subjects"),
             const SizedBox(height: Constants.internalSpacing),
             WhiteContainer(
               padding: const EdgeInsets.symmetric(vertical: 20),
@@ -29,17 +29,17 @@ class ClassesScreen extends StatelessWidget {
                     12,
                     (index) => ClickableCard(
                       cardTitle: "Grade ${index + 1}",
-                      buttonText: "Show Classes",
+                      buttonText: "Add Subject",
                       onTap: () {
                         Navigator.push(
                           context,
                           MaterialPageRoute(
                             builder:
                                 (context) => HomeScreen(
-                                  subScreen: GradeClassesScreen(
+                                  subScreen: AddSubjectScreen(
                                     gradeNumber: "${index + 1}",
                                   ),
-                                  selectedIndex: 1,
+                                  selectedIndex: 4,
                                 ),
                           ),
                         );
