@@ -18,7 +18,12 @@ class ReusableLongTextField extends StatelessWidget {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        Text(headline, style: Constants.subHeadingStyle),
+        Row(
+          children: [
+            Text(headline, style: Constants.lightTitle),
+            Text("*", style: Constants.redLightTitle),
+          ],
+        ),
         const SizedBox(height: 8),
         TextField(
           controller: controller,
