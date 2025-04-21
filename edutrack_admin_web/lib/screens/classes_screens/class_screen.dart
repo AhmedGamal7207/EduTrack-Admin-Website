@@ -2,10 +2,11 @@ import 'package:edutrack_admin_web/constants/constants.dart';
 import 'package:edutrack_admin_web/data/class_info_data.dart';
 import 'package:edutrack_admin_web/data/class_students_data.dart';
 import 'package:edutrack_admin_web/models/class_students_model.dart';
-import 'package:edutrack_admin_web/widgets/flexible_table.dart';
+import 'package:edutrack_admin_web/widgets/graphs_and_tables/flexible_table.dart';
+import 'package:edutrack_admin_web/widgets/inventory/inventory_element_widget.dart';
 import 'package:edutrack_admin_web/widgets/white_container_widget.dart';
-import 'package:edutrack_admin_web/widgets/header_widget.dart';
-import 'package:edutrack_admin_web/widgets/stats_card_widget.dart';
+import 'package:edutrack_admin_web/widgets/headers/header_widget.dart';
+import 'package:edutrack_admin_web/widgets/cards/stats_card_widget.dart';
 import 'package:flutter/material.dart';
 
 class ClassScreen extends StatelessWidget {
@@ -77,6 +78,42 @@ class ClassScreen extends StatelessWidget {
                       return "";
                   }
                 },
+              ),
+            ),
+            SizedBox(height: Constants.internalSpacing),
+            WhiteContainer(
+              child: Column(
+                children: [
+                  Text(
+                    "Inventory Management",
+                    style: Constants.poppinsFont(
+                      Constants.weightBold,
+                      20,
+                      Constants.primaryColor,
+                    ),
+                  ),
+                  SizedBox(height: Constants.internalSpacing),
+                  Row(
+                    children: [
+                      Spacer(),
+                      InventoryElement(
+                        inventoryTitle: "Marker",
+                        inventoryStatus: "Available",
+                      ),
+                      Spacer(),
+                      InventoryElement(
+                        inventoryTitle: "Eraser",
+                        inventoryStatus: "In Use",
+                      ),
+                      Spacer(),
+                      InventoryElement(
+                        inventoryTitle: "First Aid Kit",
+                        inventoryStatus: "Missing",
+                      ),
+                      Spacer(),
+                    ],
+                  ),
+                ],
               ),
             ),
           ],

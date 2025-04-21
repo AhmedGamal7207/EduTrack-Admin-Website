@@ -3,11 +3,11 @@ import 'package:edutrack_admin_web/data/line_chart_data.dart';
 import 'package:edutrack_admin_web/data/stats_data.dart';
 import 'package:edutrack_admin_web/data/att_warnings_data.dart';
 import 'package:edutrack_admin_web/models/att_warnings_model.dart';
-import 'package:edutrack_admin_web/widgets/flexible_table.dart';
+import 'package:edutrack_admin_web/widgets/graphs_and_tables/flexible_table.dart';
 import 'package:edutrack_admin_web/widgets/white_container_widget.dart';
-import 'package:edutrack_admin_web/widgets/header_widget.dart';
-import 'package:edutrack_admin_web/widgets/line_chart_widget.dart';
-import 'package:edutrack_admin_web/widgets/stats_card_widget.dart';
+import 'package:edutrack_admin_web/widgets/headers/header_widget.dart';
+import 'package:edutrack_admin_web/widgets/graphs_and_tables/line_chart_widget.dart';
+import 'package:edutrack_admin_web/widgets/cards/stats_card_widget.dart';
 import 'package:flutter/material.dart';
 
 class DashboardScreen extends StatelessWidget {

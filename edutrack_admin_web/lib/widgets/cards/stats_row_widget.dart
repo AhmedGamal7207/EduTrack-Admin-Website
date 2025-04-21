@@ -1,5 +1,5 @@
 import 'package:edutrack_admin_web/data/stats_data.dart';
-import 'package:edutrack_admin_web/widgets/stats_card_widget.dart';
+import 'package:edutrack_admin_web/widgets/cards/stats_card_widget.dart';
 import 'package:flutter/material.dart';
 
 class StatsBar extends StatelessWidget {

@@ -1,9 +1,9 @@
 import 'package:edutrack_admin_web/constants/constants.dart';
 import 'package:edutrack_admin_web/screens/home_screen.dart';
 import 'package:edutrack_admin_web/screens/classes_screens/grade_classes_screen.dart';
-import 'package:edutrack_admin_web/widgets/clickable_card_widget.dart';
+import 'package:edutrack_admin_web/widgets/cards/clickable_card_widget.dart';
 import 'package:edutrack_admin_web/widgets/white_container_widget.dart';
-import 'package:edutrack_admin_web/widgets/header_widget.dart';
+import 'package:edutrack_admin_web/widgets/headers/header_widget.dart';
 import 'package:flutter/material.dart';
 
 class ClassesScreen extends StatelessWidget {

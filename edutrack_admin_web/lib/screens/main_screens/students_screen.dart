@@ -1,4 +1,4 @@
-import 'package:edutrack_admin_web/widgets/header_widget.dart';
+import 'package:edutrack_admin_web/widgets/headers/header_widget.dart';
 import 'package:flutter/material.dart';
 
 class StudentsScreen extends StatelessWidget {

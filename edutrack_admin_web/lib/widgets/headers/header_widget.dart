@@ -1,5 +1,5 @@
 import 'package:edutrack_admin_web/constants/constants.dart';
-import 'package:edutrack_admin_web/widgets/profile_frame_widget.dart';
+import 'package:edutrack_admin_web/widgets/headers/profile_frame_widget.dart';
 import 'package:flutter/material.dart';
 import 'package:edutrack_admin_web/util/notifiers.dart';
 

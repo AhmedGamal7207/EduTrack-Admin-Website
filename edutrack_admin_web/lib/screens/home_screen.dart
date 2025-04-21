@@ -1,3 +1,4 @@
+import 'package:edutrack_admin_web/screens/classes_screens/add_class_screen.dart';
 import 'package:edutrack_admin_web/screens/classes_screens/classes_screen.dart';
 import 'package:edutrack_admin_web/screens/main_screens/dashboard_screen.dart';
 import 'package:edutrack_admin_web/screens/main_screens/inventory_screen.dart';
@@ -5,6 +6,9 @@ import 'package:edutrack_admin_web/screens/main_screens/schedule_screen.dart';
 import 'package:edutrack_admin_web/screens/main_screens/students_screen.dart';
 import 'package:edutrack_admin_web/screens/main_screens/subjects.dart';
 import 'package:edutrack_admin_web/screens/main_screens/teachers_screen.dart';
+import 'package:edutrack_admin_web/screens/students_screens/add_student_screen.dart';
+import 'package:edutrack_admin_web/screens/subjects_screens/add_subject_screen.dart';
+import 'package:edutrack_admin_web/screens/teachers_screens/add_teacher_screen.dart';
 import 'package:edutrack_admin_web/util/notifiers.dart';
 import 'package:edutrack_admin_web/widgets/navigation%20menu/side_menu_widget.dart';
 import 'package:edutrack_admin_web/util/responsive.dart';
@@ -22,6 +26,10 @@ class HomeScreen extends StatefulWidget {
 
 class _HomeScreenState extends State<HomeScreen> {
   List<Widget> screens = [
+    AddTeacherScreen(),
+    AddSubjectScreen(),
+    AddStudentScreen(),
+    AddClassScreen(gradeNumber: "1"),
     DashboardScreen(),
     ClassesScreen(),
     StudentsScreen(),

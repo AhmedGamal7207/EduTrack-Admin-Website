@@ -1,10 +1,11 @@
 import 'package:edutrack_admin_web/constants/constants.dart';
+import 'package:edutrack_admin_web/screens/classes_screens/add_class_screen.dart';
 import 'package:edutrack_admin_web/screens/classes_screens/class_screen.dart';
 import 'package:edutrack_admin_web/screens/home_screen.dart';
-import 'package:edutrack_admin_web/widgets/clickable_card_widget.dart';
-import 'package:edutrack_admin_web/widgets/custom_button_widget.dart';
-import 'package:edutrack_admin_web/widgets/header_widget.dart';
-import 'package:edutrack_admin_web/widgets/info_card_widget.dart';
+import 'package:edutrack_admin_web/widgets/cards/clickable_card_widget.dart';
+import 'package:edutrack_admin_web/widgets/buttons/custom_button_widget.dart';
+import 'package:edutrack_admin_web/widgets/headers/header_widget.dart';
+import 'package:edutrack_admin_web/widgets/cards/info_card_widget.dart';
 import 'package:edutrack_admin_web/widgets/white_container_widget.dart';
 import 'package:flutter/material.dart';
 
@@ -60,7 +61,23 @@ class GradeClassesScreen extends StatelessWidget {
                     ),
                   ),
                   SizedBox(height: 20),
-                  CustomButton(text: "Add New Class", onTap: () {}),
+                  CustomButton(
+                    text: "Add New Class",
+                    onTap: () {
+                      Navigator.pushReplacement(
+                        context,
+                        MaterialPageRoute(
+                          builder:
+                              (context) => HomeScreen(
+                                subScreen: AddClassScreen(
+                                  gradeNumber: gradeNumber,
+                                ),
+                                selectedIndex: 1,
+                              ),
+                        ),
+                      );
+                    },
+                  ),
                 ],
               ),
             ),

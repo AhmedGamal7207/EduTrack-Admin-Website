@@ -1,5 +1,5 @@
 import 'package:edutrack_admin_web/constants/constants.dart';
-import 'package:edutrack_admin_web/widgets/white_button_widget.dart';
+import 'package:edutrack_admin_web/widgets/buttons/white_button_widget.dart';
 import 'package:flutter/material.dart';
 
 class ClickableCard extends StatelessWidget {
