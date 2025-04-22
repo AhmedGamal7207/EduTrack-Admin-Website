@@ -17,11 +17,15 @@ class HeaderWidget extends StatelessWidget {
           onTap: () {
             NavController.isMenuOpen.value = !NavController.isMenuOpen.value;
           },
-          child: Image.asset(
+          child: /*Image.asset(
             'assets/icons/Circled Menu.png',
             width: 50,
             height: 50,
             color: Constants.primaryColor,
+          )*/ Icon(
+            Icons.grid_view_rounded,
+            color: Constants.primaryColor,
+            size: 50,
           ),
         ),
         SizedBox(width: 20),

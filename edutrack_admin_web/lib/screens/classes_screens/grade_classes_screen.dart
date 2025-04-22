@@ -64,7 +64,7 @@ class GradeClassesScreen extends StatelessWidget {
                   CustomButton(
                     text: "Add New Class",
                     onTap: () {
-                      Navigator.pushReplacement(
+                      Navigator.push(
                         context,
                         MaterialPageRoute(
                           builder:

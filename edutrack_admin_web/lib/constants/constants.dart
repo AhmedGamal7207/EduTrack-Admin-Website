@@ -15,6 +15,9 @@ class Constants {
   static const Color removeButtonRedText = Color(0xFFFD5353);
   static const Color removeButtonRedBg = Color(0xFFFFEAEA);
 
+  static const Color scheduleHeaderBg = Color(0x0A379EAB);
+  static const Color scheduleHeaderText = Color(0xFFC9C9C9);
+
   static const Color orangeColor = Color(0xFFFB7D5B);
   static const Color yellowColor = Color(0xFFFCC43E);
   static const Color blueColor = Color(0xFF574AE2);
@@ -100,6 +103,12 @@ class Constants {
     Constants.primaryColor,
   );
 
+  static TextStyle smallerLightTitle = Constants.poppinsFont(
+    Constants.weightRegular,
+    14,
+    Constants.primaryColor,
+  );
+
   static TextStyle redLightTitle = Constants.poppinsFont(
     Constants.weightRegular,
     18,
@@ -115,6 +124,12 @@ class Constants {
   static TextStyle inventoryTitleStyle = Constants.poppinsFont(
     Constants.weightBold,
     28,
+    Constants.blackColor,
+  );
+
+  static TextStyle scheduleHeaderStyle = Constants.poppinsFont(
+    Constants.weightRegular,
+    22,
     Constants.blackColor,
   );
 

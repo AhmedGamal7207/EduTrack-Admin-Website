@@ -3,6 +3,8 @@ import 'package:edutrack_admin_web/data/line_chart_data.dart';
 import 'package:edutrack_admin_web/data/stats_data.dart';
 import 'package:edutrack_admin_web/data/att_warnings_data.dart';
 import 'package:edutrack_admin_web/models/att_warnings_model.dart';
+import 'package:edutrack_admin_web/screens/home_screen.dart';
+import 'package:edutrack_admin_web/screens/students_screens/student_screen.dart';
 import 'package:edutrack_admin_web/widgets/graphs_and_tables/flexible_table.dart';
 import 'package:edutrack_admin_web/widgets/white_container_widget.dart';
 import 'package:edutrack_admin_web/widgets/headers/header_widget.dart';
@@ -54,6 +56,7 @@ class DashboardScreen extends StatelessWidget {
                     child: LineChartCard(
                       graphTitle: "Students Attendance",
                       data: AttendanceLineData(),
+                      showDateRow: true,
                     ),
                   ),
                 ),
@@ -63,6 +66,7 @@ class DashboardScreen extends StatelessWidget {
                     child: LineChartCard(
                       graphTitle: "Students Concentration",
                       data: ConcentrationLineData(),
+                      showDateRow: true,
                     ),
                   ),
                 ),
@@ -80,6 +84,21 @@ class DashboardScreen extends StatelessWidget {
                   "Number of Absences",
                 ],
                 data: AttendanceWarningsData.warnings,
+                onRowTap: (row) {
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                      builder:
+                          (context) => HomeScreen(
+                            subScreen: StudentScreen(
+                              name: row.name,
+                              id: row.id,
+                            ),
+                            selectedIndex: 2,
+                          ),
+                    ),
+                  );
+                },
                 getValue: (row, column) {
                   switch (column) {
                     case "Name":

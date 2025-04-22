@@ -2,6 +2,8 @@ import 'package:edutrack_admin_web/constants/constants.dart';
 import 'package:edutrack_admin_web/data/class_info_data.dart';
 import 'package:edutrack_admin_web/data/class_students_data.dart';
 import 'package:edutrack_admin_web/models/class_students_model.dart';
+import 'package:edutrack_admin_web/screens/home_screen.dart';
+import 'package:edutrack_admin_web/screens/students_screens/student_screen.dart';
 import 'package:edutrack_admin_web/widgets/graphs_and_tables/flexible_table.dart';
 import 'package:edutrack_admin_web/widgets/inventory/inventory_element_widget.dart';
 import 'package:edutrack_admin_web/widgets/white_container_widget.dart';
@@ -62,6 +64,21 @@ class ClassScreen extends StatelessWidget {
                   "Day Attendance",
                 ],
                 data: ClassStudentsData.classStudents,
+                onRowTap: (row) {
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                      builder:
+                          (context) => HomeScreen(
+                            subScreen: StudentScreen(
+                              name: row.name,
+                              id: row.id,
+                            ),
+                            selectedIndex: 2,
+                          ),
+                    ),
+                  );
+                },
                 getValue: (row, column) {
                   switch (column) {
                     case "Name":

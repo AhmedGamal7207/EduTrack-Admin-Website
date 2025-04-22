@@ -1,5 +1,4 @@
 import 'package:edutrack_admin_web/screens/schedule_screens/grade_schedule_page.dart';
-import 'package:edutrack_admin_web/screens/subjects_screens/add_subject_screen.dart';
 import 'package:edutrack_admin_web/widgets/headers/header_widget.dart';
 import 'package:flutter/material.dart';
 import 'package:edutrack_admin_web/constants/constants.dart';
