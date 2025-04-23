@@ -1,15 +1,17 @@
 import 'package:flutter/material.dart';
 import 'package:edutrack_admin_web/constants/constants.dart';
 import 'package:edutrack_admin_web/widgets/buttons/contact_button_widget.dart';
+import 'package:intl/intl.dart';
 
-class FlexibleSmartTable<T> extends StatefulWidget {
+class TableWithDate<T> extends StatefulWidget {
   final String? title;
   final List<String> columnNames;
   final List<T> data;
   final String Function(T row, String columnName) getValue;
   final void Function(T row)? onRowTap;
   final double height;
-  const FlexibleSmartTable({
+  final bool showDateFilter;
+  const TableWithDate({
     super.key,
     this.title,
     required this.columnNames,
@@ -17,14 +19,16 @@ class FlexibleSmartTable<T> extends StatefulWidget {
     required this.getValue,
     this.onRowTap,
     this.height = 325,
+    this.showDateFilter = false,
   });
 
   @override
-  State<FlexibleSmartTable<T>> createState() => _FlexibleSmartTableState<T>();
+  State<TableWithDate<T>> createState() => _TableWithDateState<T>();
 }
 
-class _FlexibleSmartTableState<T> extends State<FlexibleSmartTable<T>> {
+class _TableWithDateState<T> extends State<TableWithDate<T>> {
   int? _hoveredRowIndex;
+  DateTime filterDate = DateTime.now();
 
   @override
   Widget build(BuildContext context) {
@@ -32,15 +36,45 @@ class _FlexibleSmartTableState<T> extends State<FlexibleSmartTable<T>> {
       for (int i = 0; i < widget.columnNames.length; i++)
         i: const FlexColumnWidth(),
     };
-
-    return SizedBox(
-      height: widget.height,
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.stretch,
-        children: [
-          // Optional Title
-          if (widget.title != null)
-            Padding(
+    Widget titleContent =
+        widget.showDateFilter
+            ? Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                Padding(
+                  padding: const EdgeInsets.only(bottom: 16.0),
+                  child: Center(
+                    child: Text(
+                      widget.title!,
+                      style: Constants.poppinsFont(
+                        Constants.weightBold,
+                        20,
+                        Constants.primaryColor,
+                      ),
+                    ),
+                  ),
+                ),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    Text(
+                      "Date:",
+                      style: Constants.poppinsFont(
+                        Constants.weightMedium,
+                        14,
+                        Colors.black,
+                      ),
+                    ),
+                    const SizedBox(width: 8),
+                    _buildDateChip(context, filterDate, (picked) {
+                      setState(() => filterDate = picked);
+                    }),
+                  ],
+                ),
+                SizedBox(height: 20),
+              ],
+            )
+            : Padding(
               padding: const EdgeInsets.only(bottom: 16.0),
               child: Center(
                 child: Text(
@@ -52,7 +86,14 @@ class _FlexibleSmartTableState<T> extends State<FlexibleSmartTable<T>> {
                   ),
                 ),
               ),
-            ),
+            );
+    return SizedBox(
+      height: widget.height,
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.stretch,
+        children: [
+          // Optional Title
+          if (widget.title != null) titleContent,
 
           // Table
           Expanded(
@@ -206,6 +247,57 @@ class _FlexibleSmartTableState<T> extends State<FlexibleSmartTable<T>> {
               ),
             );
           }).toList(),
+    );
+  }
+
+  String _formatDate(DateTime date) {
+    return DateFormat('d/M/yyyy').format(date);
+  }
+
+  Future<void> _selectDate({
+    required BuildContext context,
+    required DateTime initialDate,
+    required ValueChanged<DateTime> onDateSelected,
+  }) async {
+    final DateTime? picked = await showDatePicker(
+      context: context,
+      initialDate: initialDate,
+      firstDate: DateTime(2020),
+      lastDate: DateTime.now(),
+    );
+    if (picked != null && picked != initialDate) {
+      onDateSelected(picked);
+    }
+  }
+
+  Widget _buildDateChip(
+    BuildContext context,
+    DateTime date,
+    ValueChanged<DateTime> onDateSelected,
+  ) {
+    return InkWell(
+      borderRadius: BorderRadius.circular(20),
+      onTap:
+          () => _selectDate(
+            context: context,
+            initialDate: date,
+            onDateSelected: onDateSelected,
+          ),
+      child: Container(
+        padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
+        decoration: BoxDecoration(
+          color: const Color(0xFFD2EEF3),
+          borderRadius: BorderRadius.circular(20),
+        ),
+        child: Text(
+          _formatDate(date),
+          style: Constants.poppinsFont(
+            Constants.weightMedium,
+            13,
+            Constants.primaryColor,
+          ),
+        ),
+      ),
     );
   }
 }

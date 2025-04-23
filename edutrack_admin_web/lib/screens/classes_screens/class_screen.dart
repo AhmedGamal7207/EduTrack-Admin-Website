@@ -4,7 +4,7 @@ import 'package:edutrack_admin_web/data/class_students_data.dart';
 import 'package:edutrack_admin_web/models/class_students_model.dart';
 import 'package:edutrack_admin_web/screens/home_screen.dart';
 import 'package:edutrack_admin_web/screens/students_screens/student_screen.dart';
-import 'package:edutrack_admin_web/widgets/graphs_and_tables/flexible_table.dart';
+import 'package:edutrack_admin_web/widgets/graphs_and_tables/table_with_date.dart';
 import 'package:edutrack_admin_web/widgets/inventory/inventory_element_widget.dart';
 import 'package:edutrack_admin_web/widgets/white_container_widget.dart';
 import 'package:edutrack_admin_web/widgets/headers/header_widget.dart';
@@ -54,7 +54,7 @@ class ClassScreen extends StatelessWidget {
             ),
             SizedBox(height: Constants.internalSpacing),
             WhiteContainer(
-              child: FlexibleSmartTable<ClassStudentsTableModel>(
+              child: TableWithDate<ClassStudentsTableModel>(
                 title: "Class Students",
                 columnNames: [
                   "Name",
@@ -64,6 +64,7 @@ class ClassScreen extends StatelessWidget {
                   "Day Attendance",
                 ],
                 data: ClassStudentsData.classStudents,
+                showDateFilter: true,
                 onRowTap: (row) {
                   Navigator.push(
                     context,
