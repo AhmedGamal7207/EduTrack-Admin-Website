@@ -15,5 +15,10 @@ class SideMenuData {
     MenuModel(icon: 'assets/icons/menu_icons/Book.png', title: "Subjects"),
     MenuModel(icon: 'assets/icons/menu_icons/Schedule.png', title: "Schedules"),
     MenuModel(icon: 'assets/icons/menu_icons/Eraser.png', title: "Inventory"),
+    MenuModel(icon: 'assets/icons/menu_icons/School Bus.png', title: "Buses"),
+    MenuModel(
+      icon: 'assets/icons/menu_icons/Artificial Intelligence.png',
+      title: "AI Chatbots",
+    ),
   ];
 }

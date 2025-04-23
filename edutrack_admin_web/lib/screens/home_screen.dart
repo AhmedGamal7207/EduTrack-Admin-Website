@@ -1,3 +1,5 @@
+import 'package:edutrack_admin_web/screens/buses_screens/buses_screen.dart';
+import 'package:edutrack_admin_web/screens/chatbots_screens/chatbots_screen.dart';
 import 'package:edutrack_admin_web/screens/classes_screens/classes_screen.dart';
 import 'package:edutrack_admin_web/screens/dashboard_screens/dashboard_screen.dart';
 import 'package:edutrack_admin_web/screens/inventory_screens/inventory_screen.dart';
@@ -29,6 +31,8 @@ class _HomeScreenState extends State<HomeScreen> {
     SubjectsScreen(),
     ScheduleScreen(),
     InventoryScreen(),
+    BusesScreen(),
+    ChatbotsScreen(),
   ];
 
   void handleMenuTap(int index) {

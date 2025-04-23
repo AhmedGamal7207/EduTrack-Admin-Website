@@ -71,6 +71,7 @@ flutter:
     - assets/icons/inventory_icons/
     - assets/icons/student_icons/
     - assets/icons/teacher_icons/
+    - assets/icons/driver_icons/
     - assets/lotties/
     - assets/images/
 

@@ -19,15 +19,15 @@ class StudentData {
 
   final studentData2 = const [
     StatsModel(
-      icon: 'assets/icons/student_icons/Location.png',
-      title: 'Address',
-      value: "Louran",
-      color: Constants.orangeColor,
-    ),
-    StatsModel(
       icon: 'assets/icons/student_icons/Mail.png',
       title: 'Student Mail',
       value: "mary789@school-student.com",
+      color: Constants.orangeColor,
+    ),
+    StatsModel(
+      icon: 'assets/icons/student_icons/Password.png',
+      title: 'Password',
+      value: "mary789",
       color: Constants.orangeColor,
     ),
   ];

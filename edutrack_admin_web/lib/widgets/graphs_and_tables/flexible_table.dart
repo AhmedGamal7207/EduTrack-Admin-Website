@@ -150,6 +150,8 @@ class _FlexibleSmartTableState<T> extends State<FlexibleSmartTable<T>> {
             } else if ((col.toLowerCase() == "contact parent" &&
                     content.contains("|")) ||
                 (col.toLowerCase() == "contact teacher" &&
+                    content.contains("|")) ||
+                (col.toLowerCase() == "contact driver" &&
                     content.contains("|"))) {
               final parts = content.split("|");
               final phone = parts[0];
