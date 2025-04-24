@@ -147,4 +147,7 @@ class Constants {
 
   static const double internalSpacing = 40;
   static const double pagePadding = 40;
+
+  static const tableLoadingPath = 'assets/lotties/student_loading.json';
+  static const statsLoadingPath = 'assets/lotties/student_loading.json';
 }

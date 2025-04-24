@@ -1,9 +1,13 @@
 import 'package:edutrack_admin_web/constants/constants.dart';
+import 'package:edutrack_admin_web/firebase_options.dart';
 import 'package:edutrack_admin_web/screens/home_screen.dart';
 import 'package:edutrack_admin_web/util/responsive.dart';
+import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 
-void main() {
+void main() async {
+  WidgetsFlutterBinding.ensureInitialized();
+  await Firebase.initializeApp(options: DefaultFirebaseOptions.currentPlatform);
   runApp(const MyApp());
 }
 

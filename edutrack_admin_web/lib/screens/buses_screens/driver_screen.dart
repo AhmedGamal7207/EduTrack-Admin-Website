@@ -1,14 +1,98 @@
-import 'package:edutrack_admin_web/data/driver_data.dart';
+import 'package:edutrack_admin_web/models/stats_model.dart';
 import 'package:edutrack_admin_web/widgets/cards/stats_card_widget.dart';
 import 'package:edutrack_admin_web/widgets/headers/header_widget.dart';
 import 'package:flutter/material.dart';
 import 'package:edutrack_admin_web/constants/constants.dart';
 import 'package:edutrack_admin_web/widgets/white_container_widget.dart';
+import 'package:edutrack_admin_web/services/driver_service.dart';
+import 'package:lottie/lottie.dart';
 
-class DriverScreen extends StatelessWidget {
+class DriverScreen extends StatefulWidget {
   final String name;
   final String phone;
   const DriverScreen({super.key, required this.name, required this.phone});
+
+  @override
+  State<DriverScreen> createState() => _DriverScreenState();
+}
+
+class _DriverScreenState extends State<DriverScreen> {
+  bool isLoading = true;
+  List<List<StatsModel>> groupedStats = [];
+
+  @override
+  void initState() {
+    super.initState();
+    fetchDriverData();
+  }
+
+  Future<void> fetchDriverData() async {
+    try {
+      final drivers = await DriverService().getAllDrivers();
+      final doc = drivers.firstWhere(
+        (driver) => driver['driverPhone'] == widget.phone,
+        orElse: () => {},
+      );
+
+      if (doc.isNotEmpty) {
+        setState(() {
+          groupedStats = [
+            [
+              StatsModel(
+                icon: 'assets/icons/driver_icons/Salary.png',
+                title: 'Salary',
+                value: doc['salary'].toString(),
+                color: Constants.orangeColor,
+              ),
+              StatsModel(
+                icon: 'assets/icons/driver_icons/Phone.png',
+                title: 'Driver Phone',
+                value: doc['driverPhone'] ?? '-',
+                color: Constants.orangeColor,
+              ),
+            ],
+            [
+              StatsModel(
+                icon: 'assets/icons/driver_icons/School Bus.png',
+                title: 'Bus Number',
+                value: doc['busNumber'] ?? '-',
+                color: Constants.orangeColor,
+              ),
+              StatsModel(
+                icon: 'assets/icons/driver_icons/Area.png',
+                title: 'Area',
+                value: doc['area'] ?? '-',
+                color: Constants.orangeColor,
+              ),
+            ],
+            [
+              StatsModel(
+                icon: 'assets/icons/driver_icons/Mail.png',
+                title: 'Driver Mail',
+                value: doc['driverMail'] ?? '-',
+                color: Constants.orangeColor,
+              ),
+              StatsModel(
+                icon: 'assets/icons/driver_icons/Password.png',
+                title: 'Driver Password',
+                value: doc['driverPassword'] ?? '-',
+                color: Constants.orangeColor,
+              ),
+            ],
+          ];
+          isLoading = false;
+        });
+      } else {
+        setState(() {
+          isLoading = false;
+        });
+      }
+    } catch (e) {
+      setState(() {
+        isLoading = false;
+      });
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -96,89 +180,40 @@ class DriverScreen extends StatelessWidget {
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        Text(name, style: Constants.mainHeadingStyle),
+                        Text(widget.name, style: Constants.mainHeadingStyle),
                         Text("Bus Driver", style: Constants.smallerLightTitle),
-                        Row(
-                          mainAxisSize: MainAxisSize.max,
-                          children: [
-                            Expanded(
-                              child: Row(
-                                mainAxisAlignment:
-                                    MainAxisAlignment.spaceBetween,
-                                children:
-                                    DriverData().driverData1
-                                        .map(
-                                          (stat) => Expanded(
-                                            child: Padding(
-                                              padding:
-                                                  const EdgeInsets.symmetric(
-                                                    horizontal: 8,
-                                                  ),
-                                              child: StatCardWidget(
-                                                model: stat,
-                                              ),
-                                            ),
-                                          ),
-                                        )
-                                        .toList(),
-                              ),
+                        const SizedBox(height: 20),
+                        isLoading
+                            ? Lottie.asset(
+                              Constants.statsLoadingPath,
+                              height: 200,
+                            )
+                            : Column(
+                              children:
+                                  groupedStats
+                                      .map(
+                                        (pair) => Row(
+                                          mainAxisSize: MainAxisSize.max,
+                                          children:
+                                              pair
+                                                  .map(
+                                                    (stat) => Expanded(
+                                                      child: Padding(
+                                                        padding:
+                                                            const EdgeInsets.symmetric(
+                                                              horizontal: 8,
+                                                            ),
+                                                        child: StatCardWidget(
+                                                          model: stat,
+                                                        ),
+                                                      ),
+                                                    ),
+                                                  )
+                                                  .toList(),
+                                        ),
+                                      )
+                                      .toList(),
                             ),
-                          ],
-                        ),
-                        Row(
-                          mainAxisSize: MainAxisSize.max,
-                          children: [
-                            Expanded(
-                              child: Row(
-                                mainAxisAlignment:
-                                    MainAxisAlignment.spaceBetween,
-                                children:
-                                    DriverData().driverData2
-                                        .map(
-                                          (stat) => Expanded(
-                                            child: Padding(
-                                              padding:
-                                                  const EdgeInsets.symmetric(
-                                                    horizontal: 8,
-                                                  ),
-                                              child: StatCardWidget(
-                                                model: stat,
-                                              ),
-                                            ),
-                                          ),
-                                        )
-                                        .toList(),
-                              ),
-                            ),
-                          ],
-                        ),
-                        Row(
-                          mainAxisSize: MainAxisSize.max,
-                          children: [
-                            Expanded(
-                              child: Row(
-                                mainAxisAlignment:
-                                    MainAxisAlignment.spaceBetween,
-                                children:
-                                    DriverData().driverData3
-                                        .map(
-                                          (stat) => Expanded(
-                                            child: Padding(
-                                              padding:
-                                                  const EdgeInsets.symmetric(
-                                                    horizontal: 8,
-                                                  ),
-                                              child: StatCardWidget(
-                                                model: stat,
-                                              ),
-                                            ),
-                                          ),
-                                        )
-                                        .toList(),
-                              ),
-                            ),
-                          ],
-                        ),
                       ],
                     ),
                   ),

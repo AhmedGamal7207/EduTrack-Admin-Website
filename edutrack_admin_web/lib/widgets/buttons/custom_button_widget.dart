@@ -4,7 +4,7 @@ import 'package:edutrack_admin_web/constants/constants.dart';
 class CustomButton extends StatefulWidget {
   final String text;
   final bool hasIcon;
-  final VoidCallback onTap;
+  final VoidCallback? onTap;
 
   const CustomButton({
     super.key,
