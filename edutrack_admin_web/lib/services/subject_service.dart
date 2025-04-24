@@ -12,6 +12,7 @@ class SubjectService {
     required String subjectName,
     required int numberOfLessons,
     required String coverPhoto,
+    required String lessons,
     required DocumentReference gradeRef,
   }) async {
     try {
@@ -19,6 +20,8 @@ class SubjectService {
         'subjectName': subjectName,
         'numberOfLessons': numberOfLessons,
         'coverPhoto': coverPhoto,
+        'lessons': lessons.split("\n"),
+        'subjectId': subjectId,
         'gradeRef': gradeRef,
       });
     } catch (e) {

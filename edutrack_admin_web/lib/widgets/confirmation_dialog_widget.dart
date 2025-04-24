@@ -69,6 +69,7 @@ class ConfirmationDialog extends StatelessWidget {
                     style: TextStyle(color: Colors.white),
                   ),
                   onPressed: () {
+                    onConfirm();
                     // Handle delete logic here
                     Navigator.of(context).pop(); // Close the dialog
                     // Remove subject or call delete function

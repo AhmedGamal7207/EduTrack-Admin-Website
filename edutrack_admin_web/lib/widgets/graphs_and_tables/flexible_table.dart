@@ -121,21 +121,35 @@ class _FlexibleSmartTableState<T> extends State<FlexibleSmartTable<T>> {
             Widget cell;
 
             if (col.toLowerCase() == "name") {
+              String link;
+              String name;
+              if (content.contains(";")) {
+                link = content.split(";")[1];
+                name = content.split(";")[0];
+              } else {
+                link =
+                    "https://upload.wikimedia.org/wikipedia/commons/8/89/Portrait_Placeholder.png";
+                name = content;
+              }
               cell = Row(
                 children: [
-                  CircleAvatar(
-                    radius: 14,
-                    backgroundColor: Constants.primaryColor.withOpacity(0.2),
-                    child: const Icon(
-                      Icons.person,
-                      size: 16,
-                      color: Colors.black54,
+                  Container(
+                    width: 30, // You can tweak the size here
+                    height: 30,
+                    decoration: BoxDecoration(
+                      shape: BoxShape.circle,
+                      image: DecorationImage(
+                        image: NetworkImage(link),
+                        fit:
+                            BoxFit
+                                .contain, // Fills the circle without distortion
+                      ),
                     ),
                   ),
                   const SizedBox(width: 8),
                   Flexible(
                     child: Text(
-                      content,
+                      name,
                       overflow: TextOverflow.ellipsis,
                       style: Constants.poppinsFont(
                         Constants.weightLight,

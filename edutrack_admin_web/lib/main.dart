@@ -17,7 +17,7 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      title: "EduTrack Website",
+      title: "EduTrack Admin",
       builder: (context, child) {
         return LayoutBuilder(
           builder: (context, constraints) {

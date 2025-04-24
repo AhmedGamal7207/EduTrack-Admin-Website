@@ -35,13 +35,13 @@ class _AddTeacherScreenState extends State<AddTeacherScreen> {
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       // Teacher Photo
-                      ReusablePhotoUpload(
+                      /*ReusablePhotoUpload(
                         headline: "Photo",
                         imagePath:
                             "assets/images/Person.png", // Replace with actual path
                         onChoose: () {},
                         onRemove: () {},
-                      ),
+                      ),*/
                       const SizedBox(width: 40),
 
                       // Form Fields

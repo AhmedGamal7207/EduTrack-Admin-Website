@@ -44,12 +44,12 @@ class _AddChatbotScreenState extends State<AddChatbotScreen> {
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       // Subject Cover Photo
-                      ReusablePhotoUpload(
+                      /*ReusablePhotoUpload(
                         headline: "Cover Photo",
                         imagePath: "assets/images/Chatbot.png",
                         onChoose: () {},
                         onRemove: () {},
-                      ),
+                      ),*/
                       const SizedBox(width: 40),
                       // Subject Form Fields
                       Expanded(

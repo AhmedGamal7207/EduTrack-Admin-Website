@@ -1,10 +1,27 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 
 class DriverService {
-  //final FirebaseFirestore _firestore = FirebaseFirestore.instance;
   final CollectionReference _driverRef = FirebaseFirestore.instance.collection(
     'drivers',
   );
+
+  /// Generate auto-incremented driver ID
+  Future<String> generateDriverId() async {
+    try {
+      final snapshot = await _driverRef.orderBy(FieldPath.documentId).get();
+      if (snapshot.docs.isEmpty) {
+        return '1';
+      }
+
+      final lastId = snapshot.docs.last.id;
+      final lastIntId =
+          int.tryParse(lastId.replaceAll(RegExp(r'[^0-9]'), '')) ?? 0;
+      final newId = lastIntId + 1;
+      return newId.toString();
+    } catch (e) {
+      rethrow;
+    }
+  }
 
   /// Add a new driver
   Future<void> addDriver({

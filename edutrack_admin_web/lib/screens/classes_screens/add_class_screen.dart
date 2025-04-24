@@ -37,13 +37,13 @@ class _AddClassScreenState extends State<AddClassScreen> {
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       // Cover Photo Upload
-                      ReusablePhotoUpload(
+                      /*ReusablePhotoUpload(
                         headline: "Cover Photo",
                         imagePath:
                             "assets/images/Classroom.png", // Update this path
                         onChoose: () {},
                         onRemove: () {},
-                      ),
+                      ),*/
                       const SizedBox(width: 40),
 
                       // Form Fields

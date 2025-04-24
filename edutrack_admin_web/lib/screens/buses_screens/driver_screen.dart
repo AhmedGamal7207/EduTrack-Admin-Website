@@ -19,6 +19,7 @@ class DriverScreen extends StatefulWidget {
 class _DriverScreenState extends State<DriverScreen> {
   bool isLoading = true;
   List<List<StatsModel>> groupedStats = [];
+  String? photoLink;
 
   @override
   void initState() {
@@ -36,6 +37,7 @@ class _DriverScreenState extends State<DriverScreen> {
 
       if (doc.isNotEmpty) {
         setState(() {
+          photoLink = doc['coverPhoto'].toString();
           groupedStats = [
             [
               StatsModel(
@@ -80,6 +82,7 @@ class _DriverScreenState extends State<DriverScreen> {
               ),
             ],
           ];
+
           isLoading = false;
         });
       } else {
@@ -159,12 +162,17 @@ class _DriverScreenState extends State<DriverScreen> {
                                         color: Colors.white,
                                       ),
                                     ),
-                                    CircleAvatar(
-                                      radius: 58,
-                                      backgroundImage: AssetImage(
-                                        "assets/images/Driver.png",
-                                      ),
-                                    ),
+                                    isLoading
+                                        ? Lottie.asset(
+                                          Constants.photoLoadingPath,
+                                          height: 100,
+                                        )
+                                        : CircleAvatar(
+                                          radius: 58,
+                                          backgroundImage: NetworkImage(
+                                            photoLink!,
+                                          ),
+                                        ),
                                   ],
                                 ),
                               ],

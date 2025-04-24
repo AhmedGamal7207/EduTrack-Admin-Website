@@ -6,6 +6,7 @@ class AllDriversTableModel {
   final String area;
   final String driverPhone;
   final String driverMail;
+  final String coverPhotoLink;
 
   const AllDriversTableModel({
     required this.name,
@@ -14,5 +15,6 @@ class AllDriversTableModel {
     required this.area,
     required this.driverPhone,
     required this.driverMail,
+    required this.coverPhotoLink,
   });
 }

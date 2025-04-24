@@ -31,6 +31,10 @@ class _BusesScreenState extends State<BusesScreen> {
     super.initState();
     fetchDrivers();
     searchController.addListener(_onSearch);
+    String content = "Ahmed Gamal;www.image.com";
+    print(content.split(";"));
+    print(content.split(";")[0]);
+    print(content.split(";")[1]);
   }
 
   void _onSearch() {
@@ -58,6 +62,7 @@ class _BusesScreenState extends State<BusesScreen> {
                   area: data['area'] ?? '',
                   driverPhone: data['driverPhone'] ?? '',
                   driverMail: data['driverMail'] ?? '',
+                  coverPhotoLink: data["coverPhoto"] ?? '',
                 ),
               )
               .toList();
@@ -165,7 +170,7 @@ class _BusesScreenState extends State<BusesScreen> {
                         getValue: (row, column) {
                           switch (column) {
                             case "Name":
-                              return row.name;
+                              return "${row.name};${row.coverPhotoLink}";
                             case "Salary":
                               return row.salary.toString();
                             case "Bus Number":
