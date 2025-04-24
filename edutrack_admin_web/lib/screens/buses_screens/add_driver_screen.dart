@@ -77,8 +77,8 @@ class _AddDriverScreenState extends State<AddDriverScreen> {
                                 const SizedBox(width: 20),
                                 Expanded(
                                   child: ReusableTextField(
-                                    headline: "Adress",
-                                    hintText: "7 Del Perro Heights",
+                                    headline: "Email Address",
+                                    hintText: "Driver@gmail.com",
                                   ),
                                 ),
                               ],

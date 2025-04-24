@@ -1,4 +1,4 @@
-import 'package:edutrack_admin_web/screens/chatbots_screens/grade_subjects_screen.dart';
+import 'package:edutrack_admin_web/screens/chatbots_screens/chatbot_grade_subjects_screen.dart';
 import 'package:edutrack_admin_web/widgets/headers/header_widget.dart';
 import 'package:flutter/material.dart';
 import 'package:edutrack_admin_web/constants/constants.dart';
@@ -36,7 +36,7 @@ class ChatbotsScreen extends StatelessWidget {
                           MaterialPageRoute(
                             builder:
                                 (context) => HomeScreen(
-                                  subScreen: GradeSubjectsScreen(
+                                  subScreen: ChatbotGradeSubjectsScreen(
                                     gradeNumber: "${index + 1}",
                                   ),
                                   selectedIndex: 8,
