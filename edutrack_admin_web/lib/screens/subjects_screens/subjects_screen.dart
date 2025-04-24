@@ -1,4 +1,4 @@
-import 'package:edutrack_admin_web/screens/subjects_screens/add_subject_screen.dart';
+import 'package:edutrack_admin_web/screens/subjects_screens/grade_subjects_screen.dart';
 import 'package:edutrack_admin_web/widgets/headers/header_widget.dart';
 import 'package:flutter/material.dart';
 import 'package:edutrack_admin_web/constants/constants.dart';
@@ -29,14 +29,14 @@ class SubjectsScreen extends StatelessWidget {
                     12,
                     (index) => ClickableCard(
                       cardTitle: "Grade ${index + 1}",
-                      buttonText: "Add Subject",
+                      buttonText: "List Subjects",
                       onTap: () {
                         Navigator.push(
                           context,
                           MaterialPageRoute(
                             builder:
                                 (context) => HomeScreen(
-                                  subScreen: AddSubjectScreen(
+                                  subScreen: GradeSubjectsScreen(
                                     gradeNumber: "${index + 1}",
                                   ),
                                   selectedIndex: 4,

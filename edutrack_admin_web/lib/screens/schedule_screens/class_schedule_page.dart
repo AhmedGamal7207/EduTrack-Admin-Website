@@ -5,16 +5,21 @@ import 'package:edutrack_admin_web/widgets/headers/header_widget.dart';
 import 'package:edutrack_admin_web/widgets/white_container_widget.dart';
 import 'package:lottie/lottie.dart';
 
-class GradeSchedulePage extends StatefulWidget {
+class ClassSchedulePage extends StatefulWidget {
   final String gradeNumber;
+  final String classNumber;
 
-  const GradeSchedulePage({super.key, required this.gradeNumber});
+  const ClassSchedulePage({
+    super.key,
+    required this.gradeNumber,
+    required this.classNumber,
+  });
 
   @override
-  State<GradeSchedulePage> createState() => _GradeSchedulePageState();
+  State<ClassSchedulePage> createState() => _ClassSchedulePageState();
 }
 
-class _GradeSchedulePageState extends State<GradeSchedulePage> {
+class _ClassSchedulePageState extends State<ClassSchedulePage> {
   final List<String> days = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu'];
   final List<String> subjectOptions = ['Math', 'Science', 'English'];
   final List<String> teacherOptions = ['Mr. Smith', 'Ms. Johnson', 'Mr. Ali'];
@@ -67,7 +72,7 @@ class _GradeSchedulePageState extends State<GradeSchedulePage> {
                   children: [
                     HeaderWidget(
                       headerTitle:
-                          'Grade ${widget.gradeNumber} Schedule${_isSaved ? " - Saved" : ""}',
+                          'Class ${widget.classNumber}/${widget.gradeNumber} Schedule${_isSaved ? " - Saved" : ""}',
                     ),
                     const SizedBox(height: Constants.internalSpacing),
                     Expanded(

@@ -1,4 +1,4 @@
-import 'package:edutrack_admin_web/screens/schedule_screens/grade_schedule_page.dart';
+import 'package:edutrack_admin_web/screens/schedule_screens/schedule_classes_screen.dart';
 import 'package:edutrack_admin_web/widgets/headers/header_widget.dart';
 import 'package:flutter/material.dart';
 import 'package:edutrack_admin_web/constants/constants.dart';
@@ -29,14 +29,14 @@ class ScheduleScreen extends StatelessWidget {
                     12,
                     (index) => ClickableCard(
                       cardTitle: "Grade ${index + 1}",
-                      buttonText: "Edit Schedule",
+                      buttonText: "Edit Schedules",
                       onTap: () {
                         Navigator.push(
                           context,
                           MaterialPageRoute(
                             builder:
                                 (context) => HomeScreen(
-                                  subScreen: GradeSchedulePage(
+                                  subScreen: ScheduleClassesScreen(
                                     gradeNumber: "${index + 1}",
                                   ),
                                   selectedIndex: 5,
