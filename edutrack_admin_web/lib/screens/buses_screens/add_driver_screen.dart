@@ -59,7 +59,7 @@ class _AddDriverScreenState extends State<AddDriverScreen> {
 
     driverId ??= await DriverService().generateDriverId();
     final email =
-        "$firstName$lastName$driverId@${Constants.schoolName}-driver.com"
+        "$firstName$lastName-$driverId@${Constants.schoolName}-driver.com"
             .toLowerCase();
     final password = "${firstName.toLowerCase()}${DateTime.now().year}";
 

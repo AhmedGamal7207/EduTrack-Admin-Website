@@ -31,10 +31,6 @@ class _BusesScreenState extends State<BusesScreen> {
     super.initState();
     fetchDrivers();
     searchController.addListener(_onSearch);
-    String content = "Ahmed Gamal;www.image.com";
-    print(content.split(";"));
-    print(content.split(";")[0]);
-    print(content.split(";")[1]);
   }
 
   void _onSearch() {

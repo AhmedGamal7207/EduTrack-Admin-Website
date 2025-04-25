@@ -62,7 +62,7 @@ class _AddSubjectScreenState extends State<AddSubjectScreen> {
           .doc(widget.gradeNumber);
 
       // Generate subjectId
-      final subjectId = "${widget.gradeNumber}_$subjectName"
+      final subjectId = "${widget.gradeNumber}$subjectName"
           .toLowerCase()
           .replaceAll(" ", "_");
       if (numberOfLessons.toInt() != lessons.split("\n").length) {

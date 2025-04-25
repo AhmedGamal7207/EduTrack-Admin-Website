@@ -6,6 +6,7 @@ class AllTeachersTableModel {
   final String secondSubject;
   final String teacherPhone;
   final String teacherMail;
+  final String coverPhoto;
 
   const AllTeachersTableModel({
     required this.name,
@@ -14,5 +15,6 @@ class AllTeachersTableModel {
     required this.secondSubject,
     required this.teacherPhone,
     required this.teacherMail,
+    required this.coverPhoto,
   });
 }

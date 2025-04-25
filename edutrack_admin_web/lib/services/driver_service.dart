@@ -8,16 +8,24 @@ class DriverService {
   /// Generate auto-incremented driver ID
   Future<String> generateDriverId() async {
     try {
-      final snapshot = await _driverRef.orderBy(FieldPath.documentId).get();
+      final snapshot = await _driverRef.get();
       if (snapshot.docs.isEmpty) {
-        return '1';
+        return 'driver1';
       }
 
-      final lastId = snapshot.docs.last.id;
-      final lastIntId =
-          int.tryParse(lastId.replaceAll(RegExp(r'[^0-9]'), '')) ?? 0;
-      final newId = lastIntId + 1;
-      return newId.toString();
+      // Extract numeric parts from IDs
+      final numericIds =
+          snapshot.docs
+              .map(
+                (doc) =>
+                    int.tryParse(doc.id.replaceAll(RegExp(r'\D'), '')) ?? 0,
+              )
+              .toList();
+
+      // Find the maximum and increment
+      final maxId =
+          numericIds.isEmpty ? 0 : numericIds.reduce((a, b) => a > b ? a : b);
+      return "driver${(maxId + 1).toString()}";
     } catch (e) {
       rethrow;
     }
@@ -49,6 +57,7 @@ class DriverService {
         'driverPassword': driverPassword,
         'driverMail': driverMail,
         'coverPhoto': coverPhoto,
+        'driverId': driverId,
       });
     } catch (e) {
       rethrow;

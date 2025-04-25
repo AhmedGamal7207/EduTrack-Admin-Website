@@ -6,6 +6,31 @@ class TeacherService {
     'teachers',
   );
 
+  Future<String> generateTeacherId() async {
+    try {
+      final snapshot = await _teacherRef.get();
+      if (snapshot.docs.isEmpty) {
+        return 'teacher1';
+      }
+
+      // Extract numeric parts from IDs
+      final numericIds =
+          snapshot.docs
+              .map(
+                (doc) =>
+                    int.tryParse(doc.id.replaceAll(RegExp(r'\D'), '')) ?? 0,
+              )
+              .toList();
+
+      // Find the maximum and increment
+      final maxId =
+          numericIds.isEmpty ? 0 : numericIds.reduce((a, b) => a > b ? a : b);
+      return "teacher${(maxId + 1).toString()}";
+    } catch (e) {
+      rethrow;
+    }
+  }
+
   /// Add a new teacher
   Future<void> addTeacher({
     required String teacherId,
@@ -28,6 +53,7 @@ class TeacherService {
         'teacherMail': teacherMail,
         'teacherPassword': teacherPassword,
         'coverPhoto': coverPhoto,
+        'teacherId': teacherId,
       });
     } catch (e) {
       rethrow;

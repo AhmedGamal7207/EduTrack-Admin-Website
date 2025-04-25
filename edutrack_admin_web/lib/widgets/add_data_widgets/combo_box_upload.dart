@@ -22,7 +22,7 @@ class ReusableComboBox<T> extends StatelessWidget {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        Text(headline, style: Constants.subHeadingStyle),
+        Text(headline, style: Constants.lightTitle),
         const SizedBox(height: 8),
         DropdownButtonFormField<T>(
           value: selectedItem,
