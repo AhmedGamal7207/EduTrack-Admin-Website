@@ -9,14 +9,14 @@ class ChatbotSubjectService {
   /// Add chatbot-subject-grade relation
   Future<void> addRelation({
     required String documentId, // format: chatBotId_subjectId_gradeId
-    required DocumentReference chatBotRef,
+    required DocumentReference chatbotRef,
     required DocumentReference subjectRef,
     required DocumentReference gradeRef,
     required List<String> pdfs,
   }) async {
     try {
       await _ref.doc(documentId).set({
-        'chatBotRef': chatBotRef,
+        'chatBotRef': chatbotRef,
         'subjectRef': subjectRef,
         'gradeRef': gradeRef,
         'pdfs': pdfs,

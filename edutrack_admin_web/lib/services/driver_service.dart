@@ -1,4 +1,5 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:edutrack_admin_web/services/authentication_service.dart';
 
 class DriverService {
   final CollectionReference _driverRef = FirebaseFirestore.instance.collection(
@@ -62,6 +63,7 @@ class DriverService {
     } catch (e) {
       rethrow;
     }
+    signUp(driverMail, driverPassword);
   }
 
   /// Get driver by ID

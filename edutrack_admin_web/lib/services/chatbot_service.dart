@@ -5,15 +5,39 @@ class ChatbotService {
   final CollectionReference _chatbotRef = FirebaseFirestore.instance.collection(
     'chatbots',
   );
+  Future<String> generateChatbotId() async {
+    try {
+      final snapshot = await _chatbotRef.get();
+      if (snapshot.docs.isEmpty) {
+        return 'chatbot1';
+      }
+
+      // Extract numeric parts from IDs
+      final numericIds =
+          snapshot.docs
+              .map(
+                (doc) =>
+                    int.tryParse(doc.id.replaceAll(RegExp(r'\D'), '')) ?? 0,
+              )
+              .toList();
+
+      // Find the maximum and increment
+      final maxId =
+          numericIds.isEmpty ? 0 : numericIds.reduce((a, b) => a > b ? a : b);
+      return "chatbot${(maxId + 1).toString()}";
+    } catch (e) {
+      rethrow;
+    }
+  }
 
   /// Add a new chatbot
   Future<void> addChatbot({
-    required String chatBotId,
+    required String chatbotId,
     required String chatbotName,
     required String coverPhoto,
   }) async {
     try {
-      await _chatbotRef.doc(chatBotId).set({
+      await _chatbotRef.doc(chatbotId).set({
         'chatbotName': chatbotName,
         'coverPhoto': coverPhoto,
       });

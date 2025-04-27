@@ -1,4 +1,5 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:edutrack_admin_web/services/authentication_service.dart';
 
 class TeacherService {
   //final FirebaseFirestore _firestore = FirebaseFirestore.instance;
@@ -58,6 +59,7 @@ class TeacherService {
     } catch (e) {
       rethrow;
     }
+    signUp(teacherMail, teacherPassword);
   }
 
   /// Get teacher by ID
