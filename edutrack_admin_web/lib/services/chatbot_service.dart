@@ -38,6 +38,7 @@ class ChatbotService {
   }) async {
     try {
       await _chatbotRef.doc(chatbotId).set({
+        'chatbotId': chatbotId,
         'chatbotName': chatbotName,
         'coverPhoto': coverPhoto,
       });

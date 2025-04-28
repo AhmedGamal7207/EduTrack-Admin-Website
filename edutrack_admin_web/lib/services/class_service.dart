@@ -9,12 +9,12 @@ class ClassService {
   /// Add a new class
   Future<void> addClass({
     required String classId,
-    required int classNumber,
-    required DocumentReference currentSubjectRef,
-    required DocumentReference currentTeacherRef,
+    required String classNumber,
+    required DocumentReference? currentSubjectRef,
+    required DocumentReference? currentTeacherRef,
     required String className,
     required String classLetter,
-    required int roomNumber,
+    required String roomNumber,
     required String coverPhoto,
     required DocumentReference gradeRef,
   }) async {
@@ -28,6 +28,7 @@ class ClassService {
         'roomNumber': roomNumber,
         'coverPhoto': coverPhoto,
         'gradeRef': gradeRef,
+        'classId': classId,
       });
     } catch (e) {
       rethrow;
