@@ -104,4 +104,23 @@ class TeacherService {
       rethrow;
     }
   }
+
+  Future<Map<String, dynamic>?> getTeacherByRef(String teacherRef) async {
+    try {
+      // Get reference to the document
+      DocumentSnapshot teacherSnapshot =
+          await FirebaseFirestore.instance.doc(teacherRef).get();
+
+      if (teacherSnapshot.exists) {
+        Map<String, dynamic> teacherData =
+            teacherSnapshot.data() as Map<String, dynamic>;
+        return teacherData;
+      } else {
+        return null;
+      }
+    } catch (e) {
+      print('Error fetching teacher data: $e');
+      return null;
+    }
+  }
 }

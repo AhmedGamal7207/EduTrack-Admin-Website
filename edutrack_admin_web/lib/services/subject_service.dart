@@ -80,4 +80,23 @@ class SubjectService {
       rethrow;
     }
   }
+
+  Future<Map<String, dynamic>?> getSubjectByRef(String subjectRef) async {
+    try {
+      // Get reference to the document
+      DocumentSnapshot subjectSnapshot =
+          await FirebaseFirestore.instance.doc(subjectRef).get();
+
+      if (subjectSnapshot.exists) {
+        Map<String, dynamic> subjectData =
+            subjectSnapshot.data() as Map<String, dynamic>;
+        return subjectData;
+      } else {
+        return null;
+      }
+    } catch (e) {
+      print('Error fetching subject data: $e');
+      return null;
+    }
+  }
 }
