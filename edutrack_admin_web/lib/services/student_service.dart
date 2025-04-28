@@ -6,6 +6,31 @@ class StudentService {
     'students',
   );
 
+  Future<String> generateStudentId() async {
+    try {
+      final snapshot = await _studentRef.get();
+      if (snapshot.docs.isEmpty) {
+        return 'student1';
+      }
+
+      // Extract numeric parts from IDs
+      final numericIds =
+          snapshot.docs
+              .map(
+                (doc) =>
+                    int.tryParse(doc.id.replaceAll(RegExp(r'\D'), '')) ?? 0,
+              )
+              .toList();
+
+      // Find the maximum and increment
+      final maxId =
+          numericIds.isEmpty ? 0 : numericIds.reduce((a, b) => a > b ? a : b);
+      return "student${(maxId + 1).toString()}";
+    } catch (e) {
+      rethrow;
+    }
+  }
+
   /// Add a new student
   Future<void> addStudent({
     required String studentId,
