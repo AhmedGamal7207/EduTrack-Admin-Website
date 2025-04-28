@@ -146,4 +146,34 @@ class DriverService {
       rethrow;
     }
   }
+
+  /// Get the total number of unique bus numbers
+  Future<int> getUniqueBussesCount() async {
+    try {
+      QuerySnapshot snapshot = await _driverRef.get();
+      Set<String> uniqueBusNumbers = {};
+
+      for (var doc in snapshot.docs) {
+        final data = doc.data() as Map<String, dynamic>;
+        final busNumber = data['busNumber'] ?? '';
+        if (busNumber.isNotEmpty) {
+          uniqueBusNumbers.add(busNumber);
+        }
+      }
+
+      return uniqueBusNumbers.length;
+    } catch (e) {
+      rethrow;
+    }
+  }
+
+  /// Get the total number of drivers
+  Future<int> getDriversCount() async {
+    try {
+      final snapshot = await _driverRef.get();
+      return snapshot.size; // snapshot.size gives you the number of documents
+    } catch (e) {
+      rethrow;
+    }
+  }
 }

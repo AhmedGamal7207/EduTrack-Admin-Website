@@ -136,4 +136,14 @@ class StudentService {
       return null;
     }
   }
+
+  /// Get the total number of students
+  Future<int> getStudentsCount() async {
+    try {
+      final snapshot = await _studentRef.get();
+      return snapshot.size; // snapshot.size returns the number of documents
+    } catch (e) {
+      rethrow;
+    }
+  }
 }

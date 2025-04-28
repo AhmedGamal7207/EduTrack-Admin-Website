@@ -128,4 +128,14 @@ class TeacherService {
   DocumentReference<Map<String, dynamic>> getTeacherRef(String teacherId) {
     return FirebaseFirestore.instance.collection("teachers").doc(teacherId);
   }
+
+  /// Get the total number of teachers
+  Future<int> getTeachersCount() async {
+    try {
+      final snapshot = await _teacherRef.get();
+      return snapshot.size; // snapshot.size gives number of documents
+    } catch (e) {
+      rethrow;
+    }
+  }
 }

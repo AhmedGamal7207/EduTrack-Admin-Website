@@ -141,4 +141,14 @@ class ClassService {
       return null;
     }
   }
+
+  /// Get the total number of classes
+  Future<int> getClassesCount() async {
+    try {
+      final snapshot = await _classRef.get();
+      return snapshot.size; // snapshot.size gives you the number of documents
+    } catch (e) {
+      rethrow;
+    }
+  }
 }

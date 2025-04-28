@@ -114,9 +114,11 @@ class _TeacherScreenState extends State<TeacherScreen> {
         });
       }
     } catch (e) {
+      print(e);
       setState(() {
         isLoading = false;
       });
+      rethrow;
     }
   }
 
