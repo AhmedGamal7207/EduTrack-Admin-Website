@@ -41,7 +41,6 @@ class StudentService {
     required String studentPassword,
     required String address,
     required Timestamp dateOfBirth,
-    required String nationalId,
     required String coverPhoto,
     required bool comingToday,
     required DocumentReference parentRef,
@@ -51,6 +50,7 @@ class StudentService {
   }) async {
     try {
       await _studentRef.doc(studentId).set({
+        'studentId': studentId,
         'studentName': studentName,
         'numberOfAbsences': numberOfAbsences,
         'busNumber': busNumber,
@@ -58,7 +58,6 @@ class StudentService {
         'studentPassword': studentPassword,
         'address': address,
         'dateOfBirth': dateOfBirth,
-        'nationalId': nationalId,
         'coverPhoto': coverPhoto,
         'comingToday': comingToday,
         'parentRef': parentRef,

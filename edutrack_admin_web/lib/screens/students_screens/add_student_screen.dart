@@ -27,7 +27,7 @@ class _AddStudentScreenState extends State<AddStudentScreen> {
   final dobController = TextEditingController();
   final addressController = TextEditingController();
   final mailController = TextEditingController();
-  final nationalIdController = TextEditingController();
+  final busNumberController = TextEditingController();
   final studentIdController = TextEditingController();
   final passwordController = TextEditingController();
 
@@ -95,15 +95,13 @@ class _AddStudentScreenState extends State<AddStudentScreen> {
     });
 
     try {
-      final teacherName =
-          "${firstNameController.text.trim()} ${lastNameController.text.trim()}";
       final dob = DateFormat('dd/MM/yyyy').parse(dobController.text);
       final dobTimestamp = Timestamp.fromDate(dob);
       final firstName = firstNameController.text;
       final lastName = lastNameController.text;
       final address = addressController.text;
       final email = mailController.text.trim();
-      final nationalId = nationalIdController.text.trim();
+      final busNumber = busNumberController.text.trim();
       final password = passwordController.text.trim();
 
       final parentEmail = parentEmailController.text.trim();
@@ -128,35 +126,28 @@ class _AddStudentScreenState extends State<AddStudentScreen> {
           folder: "students",
         );
       }
-
-      await StudentService().addStudent(
-        studentId: studentId,
-        studentName: "$firstName $lastName",
-        numberOfAbsences: 0, // Assuming new students have 0 absences
-        busNumber: '', // You need to set this if you have it
-        studentMail: email,
-        studentPassword: password,
-        address: address,
-        dateOfBirth: Timestamp.fromDate(
-          DateTime.parse(dob),
-        ), // Make sure `dob` is in 'yyyy-MM-dd' format
-        nationalId: nationalId,
-        coverPhoto: '', // You need to set this if you have it
-        comingToday: false, // Set based on your logic
-        parentRef: parentRef, // You should already have this reference
-        classRef: classRef, // You should already have this reference
-        gradeRef: gradeRef, // You should already have this reference
-        driverRef: driverRef, // You should already have this reference
-      );
       String gradeId = selectedGrade!.split(" ")[1];
 
       final gradeRef = FirebaseFirestore.instance
           .collection('grades')
           .doc(gradeId);
 
-      final teacherRef = FirebaseFirestore.instance
-          .collection('teachers')
-          .doc(teacherId);
+      await StudentService().addStudent(
+        studentId: studentId!,
+        studentName: "$firstName $lastName",
+        numberOfAbsences: 0, // Assuming new students have 0 absences
+        busNumber: busNumber,
+        studentMail: email,
+        studentPassword: password,
+        address: address,
+        dateOfBirth: dobTimestamp,
+        coverPhoto: imageUrl!,
+        comingToday: false,
+        parentRef: parentRef,
+        classRef: classRef,
+        gradeRef: gradeRef,
+        driverRef: driverRef,
+      );
 
       final majorSubjectRef = FirebaseFirestore.instance
           .collection('subjects')
