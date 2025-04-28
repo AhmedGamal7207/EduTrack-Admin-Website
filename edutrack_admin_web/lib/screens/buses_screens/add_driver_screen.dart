@@ -1,4 +1,3 @@
-import 'dart:typed_data';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:edutrack_admin_web/constants/constants.dart';
 import 'package:edutrack_admin_web/screens/buses_screens/buses_screen.dart';

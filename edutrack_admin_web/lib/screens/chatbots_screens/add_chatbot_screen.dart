@@ -1,4 +1,3 @@
-import 'dart:typed_data';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:edutrack_admin_web/constants/constants.dart';
 import 'package:edutrack_admin_web/screens/chatbots_screens/chatbots_screen.dart';
@@ -128,9 +127,7 @@ class _AddChatbotScreenState extends State<AddChatbotScreen> {
       final cloudinaryService = CloudinaryService();
 
       // Generate chatbot ID if not already generated
-      if (chatbotId == null) {
-        chatbotId = await ChatbotService().generateChatbotId();
-      }
+      chatbotId ??= await ChatbotService().generateChatbotId();
 
       // Clear previous URLs
       pdfUrls = [];
@@ -184,9 +181,7 @@ class _AddChatbotScreenState extends State<AddChatbotScreen> {
     });
 
     // Generate chatbot ID if not already generated
-    if (chatbotId == null) {
-      chatbotId = await ChatbotService().generateChatbotId();
-    }
+    chatbotId ??= await ChatbotService().generateChatbotId();
 
     try {
       final chatbotName = nameController.text;

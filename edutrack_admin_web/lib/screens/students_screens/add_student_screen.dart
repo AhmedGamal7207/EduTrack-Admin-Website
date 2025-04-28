@@ -131,7 +131,7 @@ class _AddStudentScreenState extends State<AddStudentScreen> {
       final gradeRef = FirebaseFirestore.instance
           .collection('grades')
           .doc(gradeId);
-
+      /*
       await StudentService().addStudent(
         studentId: studentId!,
         studentName: "$firstName $lastName",
@@ -221,21 +221,21 @@ class _AddStudentScreenState extends State<AddStudentScreen> {
             subjectRef: secondSubjectRef2,
             gradeRef: gradeRef2,
           );
-        }
-      }
+        }'
+      }*/
 
       if (!mounted) return;
       ScaffoldMessenger.of(context).showSnackBar(
         const SnackBar(content: Text("Teacher added successfully.")),
       );
-      Navigator.pushReplacement(
+      /*Navigator.pushReplacement(
         context,
         MaterialPageRoute(
           builder:
               (context) =>
                   HomeScreen(subScreen: TeachersScreen(), selectedIndex: 3),
         ),
-      );
+      );*/
     } catch (e) {
       setState(() {
         errorMessage = "Error: ${e.toString()}";

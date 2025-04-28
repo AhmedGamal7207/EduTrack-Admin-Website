@@ -60,10 +60,12 @@ class ClassService {
     try {
       Map<String, dynamic> data = {};
       if (classNumber != null) data['classNumber'] = classNumber;
-      if (currentSubjectRef != null)
+      if (currentSubjectRef != null) {
         data['currentSubjectRef'] = currentSubjectRef;
-      if (currentTeacherRef != null)
+      }
+      if (currentTeacherRef != null) {
         data['currentTeacherRef'] = currentTeacherRef;
+      }
       if (className != null) data['className'] = className;
       if (classLetter != null) data['classLetter'] = classLetter;
       if (roomNumber != null) data['roomNumber'] = roomNumber;
