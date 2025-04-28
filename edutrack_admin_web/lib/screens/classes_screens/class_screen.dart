@@ -48,20 +48,18 @@ class _ClassScreenState extends State<ClassScreen> {
             "${widget.gradeNumber}class${widget.classNumber}",
         orElse: () => {},
       );
-
-      print("Doc: $doc");
-      print("Current subject: ${doc["currentSubjectRef"]}");
-      print("Current teacher: ${doc["currentTeacherRef"]}");
-      final currentSubjectData = await SubjectService().getSubjectByRef(
-        doc["currentSubjectRef"],
-      );
-
-      final currentTeacherData = await TeacherService().getTeacherByRef(
-        doc["currentTeacherRef"],
-      );
-      print("Doc: $doc");
-      print("Current subject: ${doc["currentSubject"]}");
-      print("Current teacher: ${doc["currentTeacher"]}");
+      Map<String, dynamic>? currentSubjectData =
+          doc["currentSubjectRef"] == null
+              ? null
+              : await SubjectService().getSubjectByRef(
+                doc["currentSubjectRef"],
+              );
+      Map<String, dynamic>? currentTeacherData =
+          doc["currentTeacherRef"] == null
+              ? null
+              : await TeacherService().getTeacherByRef(
+                doc["currentTeacherRef"],
+              );
       if (doc.isNotEmpty) {
         setState(() {
           photoLink = doc['coverPhoto'].toString();
@@ -76,7 +74,7 @@ class _ClassScreenState extends State<ClassScreen> {
               icon: 'assets/icons/class_icons/Student Desk.png',
               title: 'Attending Students',
               value: "0", //TODO HEREEEEEEEEEEEEEEE
-              color: Constants.orangeColor,
+              color: Constants.primaryColor,
             ),
             StatsModel(
               icon: 'assets/icons/class_icons/Book.png',
@@ -85,7 +83,7 @@ class _ClassScreenState extends State<ClassScreen> {
                   currentSubjectData != null
                       ? currentSubjectData["subjectName"]
                       : '-',
-              color: Constants.orangeColor,
+              color: Constants.yellowColor,
             ),
             StatsModel(
               icon: 'assets/icons/class_icons/Teacher.png',
@@ -94,7 +92,7 @@ class _ClassScreenState extends State<ClassScreen> {
                   currentTeacherData != null
                       ? currentTeacherData["teacherName"]
                       : '-',
-              color: Constants.orangeColor,
+              color: Constants.blueColor,
             ),
           ];
           isLoading = false;
@@ -105,6 +103,7 @@ class _ClassScreenState extends State<ClassScreen> {
         });
       }
     } catch (e) {
+      print(e);
       setState(() {
         isLoading = false;
       });
@@ -137,11 +136,13 @@ class _ClassScreenState extends State<ClassScreen> {
                               children:
                                   groupedStats
                                       .map(
-                                        (stat) => Padding(
-                                          padding: const EdgeInsets.symmetric(
-                                            horizontal: 8,
+                                        (stat) => Expanded(
+                                          child: Padding(
+                                            padding: const EdgeInsets.symmetric(
+                                              horizontal: 8,
+                                            ),
+                                            child: StatCardWidget(model: stat),
                                           ),
-                                          child: StatCardWidget(model: stat),
                                         ),
                                       )
                                       .toList(),

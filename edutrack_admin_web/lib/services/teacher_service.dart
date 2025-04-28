@@ -105,11 +105,12 @@ class TeacherService {
     }
   }
 
-  Future<Map<String, dynamic>?> getTeacherByRef(String teacherRef) async {
+  Future<Map<String, dynamic>?> getTeacherByRef(dynamic teacherRef) async {
     try {
       // Get reference to the document
+      DocumentReference teacherRefDoc = teacherRef as DocumentReference;
       DocumentSnapshot teacherSnapshot =
-          await FirebaseFirestore.instance.doc(teacherRef).get();
+          await FirebaseFirestore.instance.doc(teacherRefDoc.path).get();
 
       if (teacherSnapshot.exists) {
         Map<String, dynamic> teacherData =
