@@ -14,6 +14,7 @@ import 'package:edutrack_admin_web/widgets/headers/header_widget.dart';
 import 'package:edutrack_admin_web/widgets/white_container_widget.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:file_picker/file_picker.dart';
 
 class AddChatbotScreen extends StatefulWidget {
   final String gradeNumber;
@@ -30,12 +31,18 @@ class AddChatbotScreen extends StatefulWidget {
 
 class _AddChatbotScreenState extends State<AddChatbotScreen> {
   final nameController = TextEditingController();
+  final pdfListController = TextEditingController();
   Uint8List? imageBytes;
   String? fileName;
   String? imageUrl;
   String? errorMessage;
   bool isSaving = false;
+  bool isUploading = false;
   String? chatbotId;
+
+  // Store selected PDF files
+  List<Map<String, dynamic>> selectedPdfFiles = [];
+  List<String> pdfUrls = [];
 
   void onPhotoSelected(Uint8List fileBytes, String name) {
     setState(() {
@@ -52,12 +59,134 @@ class _AddChatbotScreenState extends State<AddChatbotScreen> {
     });
   }
 
+  Future<void> pickPdfFiles() async {
+    try {
+      // Set FileType.any and then filter after selection to avoid initialization issues
+      FilePickerResult? result = await FilePicker.platform.pickFiles(
+        type: FileType.any,
+        allowMultiple: true,
+      );
+
+      if (result != null && result.files.isNotEmpty) {
+        // Filter out non-PDF files
+        final pdfFiles = result.files.where(
+          (file) => file.name.toLowerCase().endsWith('.pdf'),
+        );
+
+        if (pdfFiles.isEmpty) {
+          ScaffoldMessenger.of(context).showSnackBar(
+            const SnackBar(content: Text("Please select PDF files only")),
+          );
+          return;
+        }
+
+        setState(() {
+          // Store files with required information for uploads
+          selectedPdfFiles =
+              pdfFiles
+                  .map((file) => {'name': file.name, 'bytes': file.bytes})
+                  .toList();
+
+          // Update the text field with file names
+          String fileNames = selectedPdfFiles
+              .map((file) => file['name'] as String)
+              .join('\n');
+          pdfListController.text = fileNames;
+        });
+
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: Text("${selectedPdfFiles.length} PDF files selected"),
+          ),
+        );
+      }
+    } catch (e) {
+      setState(() {
+        errorMessage = "Error picking files: ${e.toString()}";
+      });
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text("Error picking files: ${e.toString()}")),
+      );
+      print("FilePicker error: ${e.toString()}");
+    }
+  }
+
+  Future<void> uploadPdfFiles() async {
+    if (selectedPdfFiles.isEmpty) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(content: Text("Please select PDF files first")),
+      );
+      return;
+    }
+
+    setState(() {
+      isUploading = true;
+      errorMessage = null;
+    });
+
+    try {
+      final cloudinaryService = CloudinaryService();
+
+      // Generate chatbot ID if not already generated
+      if (chatbotId == null) {
+        chatbotId = await ChatbotService().generateChatbotId();
+      }
+
+      // Clear previous URLs
+      pdfUrls = [];
+
+      // Upload each PDF file to Cloudinary
+      for (var pdfFile in selectedPdfFiles) {
+        final fileName = pdfFile['name'] as String;
+        final fileBytes = pdfFile['bytes'] as Uint8List;
+
+        String? pdfUrl = await cloudinaryService.uploadPdf(
+          fileBytes,
+          "${chatbotId}_${fileName.replaceAll(' ', '_')}",
+          folder: "chatbot_pdfs",
+        );
+
+        if (pdfUrl != null) {
+          pdfUrls.add(pdfUrl);
+        }
+      }
+
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Text("${pdfUrls.length} PDF files uploaded successfully"),
+        ),
+      );
+    } catch (e) {
+      setState(() {
+        errorMessage = "Error uploading PDFs: ${e.toString()}";
+      });
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text("Error uploading PDFs: ${e.toString()}")),
+      );
+    } finally {
+      setState(() {
+        isUploading = false;
+      });
+    }
+  }
+
   Future<void> saveChatbot() async {
+    if (nameController.text.isEmpty) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(content: Text("Please enter a chatbot name")),
+      );
+      return;
+    }
+
     setState(() {
       isSaving = true;
       errorMessage = null;
     });
-    chatbotId = await ChatbotService().generateChatbotId();
+
+    // Generate chatbot ID if not already generated
+    if (chatbotId == null) {
+      chatbotId = await ChatbotService().generateChatbotId();
+    }
 
     try {
       final chatbotName = nameController.text;
@@ -80,11 +209,17 @@ class _AddChatbotScreenState extends State<AddChatbotScreen> {
         );
       }
 
+      // If PDFs are selected but not uploaded yet, upload them now
+      if (selectedPdfFiles.isNotEmpty && pdfUrls.isEmpty) {
+        await uploadPdfFiles();
+      }
+
       await ChatbotService().addChatbot(
         chatbotId: chatbotId!,
         chatbotName: chatbotName,
         coverPhoto: imageUrl ?? '',
       );
+
       String gradeId = widget.gradeNumber;
 
       final gradeRef = FirebaseFirestore.instance
@@ -105,7 +240,7 @@ class _AddChatbotScreenState extends State<AddChatbotScreen> {
         gradeRef: gradeRef,
         chatbotRef: chatbotRef,
         subjectRef: subjectRef,
-        pdfs: List.empty(),
+        pdfs: pdfUrls,
       );
 
       if (!mounted) return;
@@ -124,6 +259,9 @@ class _AddChatbotScreenState extends State<AddChatbotScreen> {
       setState(() {
         errorMessage = "Error: ${e.toString()}";
       });
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text("Error saving chatbot: ${e.toString()}")),
+      );
     } finally {
       setState(() {
         isSaving = false;
@@ -168,22 +306,42 @@ class _AddChatbotScreenState extends State<AddChatbotScreen> {
                             ReusableTextField(
                               headline: "Chatbot Name",
                               hintText: "English",
+                              controller: nameController,
                             ),
                             const SizedBox(height: 20),
                             ReusableLongTextField(
                               headline: "Resources(PDFs)",
                               hintText:
                                   "Lesson 1: Present Simple.pdf\nLesson 2: Past Simple.pdf\nLesson 3: Past Continuous.pdf\nLesson 4: Future Simple.pdf",
+                              controller: pdfListController,
+                              readOnly: true,
                             ),
                             const SizedBox(height: 30),
-                            Align(
-                              alignment: Alignment.centerLeft,
-                              child: CustomButton(
-                                text: "Upload Files",
-                                onTap: () {},
-                                hasIcon: false,
-                              ),
+                            Row(
+                              children: [
+                                CustomButton(
+                                  text: "Choose Files",
+                                  onTap: pickPdfFiles,
+                                  hasIcon: false,
+                                ),
+                                const SizedBox(width: 20),
+                                CustomButton(
+                                  text:
+                                      isUploading
+                                          ? "Uploading..."
+                                          : "Upload Files",
+                                  onTap: isUploading ? null : uploadPdfFiles,
+                                  hasIcon: false,
+                                ),
+                              ],
                             ),
+                            if (errorMessage != null) ...[
+                              const SizedBox(height: 20),
+                              Text(
+                                errorMessage!,
+                                style: const TextStyle(color: Colors.red),
+                              ),
+                            ],
                             const SizedBox(height: 30),
                             Align(
                               alignment: Alignment.centerRight,

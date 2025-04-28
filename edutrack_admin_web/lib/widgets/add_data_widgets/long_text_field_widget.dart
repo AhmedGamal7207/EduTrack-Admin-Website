@@ -5,12 +5,14 @@ class ReusableLongTextField extends StatelessWidget {
   final String headline;
   final String hintText;
   final TextEditingController? controller;
+  final bool readOnly;
 
   const ReusableLongTextField({
     super.key,
     required this.headline,
     required this.hintText,
     this.controller,
+    this.readOnly = false,
   });
 
   @override
@@ -26,6 +28,7 @@ class ReusableLongTextField extends StatelessWidget {
         ),
         const SizedBox(height: 8),
         TextField(
+          readOnly: readOnly,
           controller: controller,
           maxLines: null,
           minLines: 5,
