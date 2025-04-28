@@ -98,4 +98,47 @@ class ClassService {
       rethrow;
     }
   }
+
+  DocumentReference<Map<String, dynamic>> getClassRef(String classId) {
+    return FirebaseFirestore.instance.collection("classes").doc(classId);
+  }
+
+  Future<List<String>> getClassIdsByGradeNumber(String gradeNumber) async {
+    try {
+      List<Map<String, dynamic>> allClasses = await getAllClasses();
+      List<String> filteredClassIds = [];
+
+      for (var classDoc in allClasses) {
+        String classId = classDoc['classId'];
+        if (classId.split("class")[0] == gradeNumber) {
+          filteredClassIds.add(classId);
+        }
+      }
+
+      return filteredClassIds;
+    } catch (e) {
+      rethrow;
+    }
+  }
+
+  Future<Map<String, dynamic>?> getClassByRef(dynamic classRef) async {
+    try {
+      // Get reference to the document
+      DocumentReference classRefDoc = classRef as DocumentReference;
+      DocumentSnapshot classSnapshot =
+          await FirebaseFirestore.instance.doc(classRefDoc.path).get();
+
+      if (classSnapshot.exists) {
+        Map<String, dynamic> classData =
+            classSnapshot.data() as Map<String, dynamic>;
+        return classData;
+      } else {
+        print("Class data is null");
+        return null;
+      }
+    } catch (e) {
+      print('Error fetching class data: $e');
+      return null;
+    }
+  }
 }

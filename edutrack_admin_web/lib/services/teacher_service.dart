@@ -124,4 +124,8 @@ class TeacherService {
       return null;
     }
   }
+
+  DocumentReference<Map<String, dynamic>> getTeacherRef(String teacherId) {
+    return FirebaseFirestore.instance.collection("teachers").doc(teacherId);
+  }
 }

@@ -7,6 +7,7 @@ class AllStudentsTableModel {
   final int absences;
   final String parentPhone;
   final String parentMail;
+  final String coverPhoto;
 
   const AllStudentsTableModel({
     required this.name,
@@ -16,5 +17,6 @@ class AllStudentsTableModel {
     required this.absences,
     required this.parentPhone,
     required this.parentMail,
+    required this.coverPhoto,
   });
 }

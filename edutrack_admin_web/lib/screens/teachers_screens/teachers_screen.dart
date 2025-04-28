@@ -117,109 +117,112 @@ class _TeachersScreenState extends State<TeachersScreen> {
   Widget build(BuildContext context) {
     return Padding(
       padding: const EdgeInsets.all(Constants.pagePadding),
-      child: SingleChildScrollView(
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            HeaderWidget(headerTitle: "Teachers"),
-            const SizedBox(height: Constants.internalSpacing),
-            WhiteContainer(
-              child: Row(
-                children: [
-                  Expanded(
-                    flex: 1,
-                    child: ReusableSearchField(controller: searchController),
-                  ),
-                  const Spacer(),
-                  CustomButton(
-                    text: "Add New Teacher",
-                    onTap: () async {
-                      final result = await Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                          builder:
-                              (context) => HomeScreen(
-                                subScreen: const AddTeacherScreen(),
-                                selectedIndex: 3,
-                              ),
-                        ),
-                      );
-                      if (result == true) fetchTeachers();
-                    },
-                    hasIcon: true,
-                  ),
-                ],
+      child: Align(
+        alignment: Alignment.topLeft,
+        child: SingleChildScrollView(
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              HeaderWidget(headerTitle: "Teachers"),
+              const SizedBox(height: Constants.internalSpacing),
+              WhiteContainer(
+                child: Row(
+                  children: [
+                    Expanded(
+                      flex: 1,
+                      child: ReusableSearchField(controller: searchController),
+                    ),
+                    const Spacer(),
+                    CustomButton(
+                      text: "Add New Teacher",
+                      onTap: () async {
+                        final result = await Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                            builder:
+                                (context) => HomeScreen(
+                                  subScreen: const AddTeacherScreen(),
+                                  selectedIndex: 3,
+                                ),
+                          ),
+                        );
+                        if (result == true) fetchTeachers();
+                      },
+                      hasIcon: true,
+                    ),
+                  ],
+                ),
               ),
-            ),
-            const SizedBox(height: Constants.internalSpacing),
-            WhiteContainer(
-              padding: EdgeInsets.all(0),
-              child:
-                  isLoading
-                      ? Center(
-                        child: Lottie.asset(
-                          Constants.tableLoadingPath,
-                          height: 200,
-                        ),
-                      )
-                      : errorMessage != null
-                      ? Padding(
-                        padding: const EdgeInsets.all(16.0),
-                        child: Text(
-                          errorMessage!,
-                          style: TextStyle(color: Colors.red),
-                        ),
-                      )
-                      : filteredTeachers.isEmpty
-                      ? const Padding(
-                        padding: EdgeInsets.all(16.0),
-                        child: Text("No teachers found."),
-                      )
-                      : FlexibleSmartTable<AllTeachersTableModel>(
-                        height: 500,
-                        title: null,
-                        columnNames: [
-                          "Name",
-                          "Salary",
-                          "Major Subject",
-                          "Second Subject",
-                          "Contact Teacher",
-                        ],
-                        data: filteredTeachers,
-                        onRowTap: (row) {
-                          Navigator.push(
-                            context,
-                            MaterialPageRoute(
-                              builder:
-                                  (context) => HomeScreen(
-                                    subScreen: TeacherScreen(
-                                      name: row.name,
-                                      phone: row.teacherPhone,
+              const SizedBox(height: Constants.internalSpacing),
+              WhiteContainer(
+                padding: EdgeInsets.all(0),
+                child:
+                    isLoading
+                        ? Center(
+                          child: Lottie.asset(
+                            Constants.tableLoadingPath,
+                            height: 200,
+                          ),
+                        )
+                        : errorMessage != null
+                        ? Padding(
+                          padding: const EdgeInsets.all(16.0),
+                          child: Text(
+                            errorMessage!,
+                            style: TextStyle(color: Colors.red),
+                          ),
+                        )
+                        : filteredTeachers.isEmpty
+                        ? const Padding(
+                          padding: EdgeInsets.all(16.0),
+                          child: Text("No teachers found."),
+                        )
+                        : FlexibleSmartTable<AllTeachersTableModel>(
+                          height: 500,
+                          title: null,
+                          columnNames: [
+                            "Name",
+                            "Salary",
+                            "Major Subject",
+                            "Second Subject",
+                            "Contact Teacher",
+                          ],
+                          data: filteredTeachers,
+                          onRowTap: (row) {
+                            Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                builder:
+                                    (context) => HomeScreen(
+                                      subScreen: TeacherScreen(
+                                        name: row.name,
+                                        phone: row.teacherPhone,
+                                      ),
+                                      selectedIndex: 3,
                                     ),
-                                    selectedIndex: 3,
-                                  ),
-                            ),
-                          );
-                        },
-                        getValue: (row, column) {
-                          switch (column) {
-                            case "Name":
-                              return "${row.name};${row.coverPhoto}";
-                            case "Salary":
-                              return row.salary.toString();
-                            case "Major Subject":
-                              return row.majorSubject;
-                            case "Second Subject":
-                              return row.secondSubject;
-                            case "Contact Teacher":
-                              return "${row.teacherPhone}|${row.teacherMail}";
-                            default:
-                              return "";
-                          }
-                        },
-                      ),
-            ),
-          ],
+                              ),
+                            );
+                          },
+                          getValue: (row, column) {
+                            switch (column) {
+                              case "Name":
+                                return "${row.name};${row.coverPhoto}";
+                              case "Salary":
+                                return row.salary.toString();
+                              case "Major Subject":
+                                return row.majorSubject;
+                              case "Second Subject":
+                                return row.secondSubject;
+                              case "Contact Teacher":
+                                return "${row.teacherPhone}|${row.teacherMail}";
+                              default:
+                                return "";
+                            }
+                          },
+                        ),
+              ),
+            ],
+          ),
         ),
       ),
     );

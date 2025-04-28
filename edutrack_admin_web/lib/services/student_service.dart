@@ -112,4 +112,28 @@ class StudentService {
       rethrow;
     }
   }
+
+  DocumentReference<Map<String, dynamic>> getStudentRef(String studentId) {
+    return FirebaseFirestore.instance.collection("students").doc(studentId);
+  }
+
+  Future<Map<String, dynamic>?> getStudentByRef(dynamic studentRef) async {
+    try {
+      // Get reference to the document
+      DocumentReference studentRefDoc = studentRef as DocumentReference;
+      DocumentSnapshot studentSnapshot =
+          await FirebaseFirestore.instance.doc(studentRefDoc.path).get();
+
+      if (studentSnapshot.exists) {
+        Map<String, dynamic> studentData =
+            studentSnapshot.data() as Map<String, dynamic>;
+        return studentData;
+      } else {
+        return null;
+      }
+    } catch (e) {
+      print('Error fetching student data: $e');
+      return null;
+    }
+  }
 }

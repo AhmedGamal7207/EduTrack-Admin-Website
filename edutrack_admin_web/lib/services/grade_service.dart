@@ -60,4 +60,28 @@ class GradeService {
       rethrow;
     }
   }
+
+  DocumentReference<Map<String, dynamic>> getGradeRef(String gradeId) {
+    return FirebaseFirestore.instance.collection("grades").doc(gradeId);
+  }
+
+  Future<Map<String, dynamic>?> getGradeByRef(dynamic gradeRef) async {
+    try {
+      // Get reference to the document
+      DocumentReference gradeRefDoc = gradeRef as DocumentReference;
+      DocumentSnapshot gradeSnapshot =
+          await FirebaseFirestore.instance.doc(gradeRefDoc.path).get();
+
+      if (gradeSnapshot.exists) {
+        Map<String, dynamic> gradeData =
+            gradeSnapshot.data() as Map<String, dynamic>;
+        return gradeData;
+      } else {
+        return null;
+      }
+    } catch (e) {
+      print('Error fetching grade data: $e');
+      return null;
+    }
+  }
 }

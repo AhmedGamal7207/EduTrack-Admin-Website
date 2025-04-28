@@ -108,4 +108,42 @@ class DriverService {
       rethrow;
     }
   }
+
+  DocumentReference<Map<String, dynamic>> getDriverRef(String driverId) {
+    return FirebaseFirestore.instance.collection("drivers").doc(driverId);
+  }
+
+  Future<String?> getDriverIdByBusNumber(String busNumber) async {
+    try {
+      final snapshot =
+          await _driverRef
+              .where('busNumber', isEqualTo: busNumber)
+              .limit(1)
+              .get();
+
+      if (snapshot.docs.isNotEmpty) {
+        return snapshot.docs.first.id; // Driver document ID (e.g., "driver1")
+      } else {
+        return null; // No driver found with that bus number
+      }
+    } catch (e) {
+      rethrow;
+    }
+  }
+
+  /// Get list of "busNumber - area - driverName" for all drivers
+  Future<List<String>> getBusNumberAreaDriverNameList() async {
+    try {
+      QuerySnapshot snapshot = await _driverRef.get();
+      return snapshot.docs.map((doc) {
+        final data = doc.data() as Map<String, dynamic>;
+        final busNumber = data['busNumber'] ?? '';
+        final area = data['area'] ?? '';
+        final driverName = data['driverName'] ?? '';
+        return "$busNumber - $area - $driverName";
+      }).toList();
+    } catch (e) {
+      rethrow;
+    }
+  }
 }

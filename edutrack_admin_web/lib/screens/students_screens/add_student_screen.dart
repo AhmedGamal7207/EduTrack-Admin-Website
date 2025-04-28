@@ -2,7 +2,13 @@ import 'dart:typed_data';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:edutrack_admin_web/constants/constants.dart';
+import 'package:edutrack_admin_web/screens/home_screen.dart';
+import 'package:edutrack_admin_web/screens/students_screens/students_screen.dart';
+import 'package:edutrack_admin_web/services/class_service.dart';
 import 'package:edutrack_admin_web/services/cloudinary_service.dart';
+import 'package:edutrack_admin_web/services/driver_service.dart';
+import 'package:edutrack_admin_web/services/grade_service.dart';
+import 'package:edutrack_admin_web/services/parent_service.dart';
 import 'package:edutrack_admin_web/services/student_service.dart';
 import 'package:edutrack_admin_web/widgets/add_data_widgets/combo_box_upload.dart';
 import 'package:edutrack_admin_web/widgets/add_data_widgets/photo_upload_widget.dart';
@@ -27,16 +33,19 @@ class _AddStudentScreenState extends State<AddStudentScreen> {
   final dobController = TextEditingController();
   final addressController = TextEditingController();
   final mailController = TextEditingController();
-  final busNumberController = TextEditingController();
   final studentIdController = TextEditingController();
   final passwordController = TextEditingController();
 
   final parentEmailController = TextEditingController();
   final parentPhoneController = TextEditingController();
-  final parentfirstNameController = TextEditingController();
-  final parentlastNameController = TextEditingController();
+  final parentFirstNameController = TextEditingController();
+  final parentLastNameController = TextEditingController();
+  final parentMailController = TextEditingController();
+  final parentPasswordController = TextEditingController();
+
   String? selectedGrade;
   String? selectedClass;
+  String? selectedBusNumber;
 
   Uint8List? imageBytes;
   String? fileName;
@@ -45,13 +54,28 @@ class _AddStudentScreenState extends State<AddStudentScreen> {
   bool isSaving = false;
 
   String? studentId;
+  String? parentId;
 
   List<String> filteredclasses = [];
+  List<String> bussesNumbers = [];
   @override
   void initState() {
     super.initState();
     firstNameController.addListener(autoGenerateEmailAndPassword);
     lastNameController.addListener(autoGenerateEmailAndPassword);
+
+    parentFirstNameController.addListener(autoGenerateEmailAndPasswordParent);
+    parentLastNameController.addListener(autoGenerateEmailAndPasswordParent);
+
+    loadBussesData();
+  }
+
+  void loadBussesData() async {
+    List<String> loadedBusses =
+        await DriverService().getBusNumberAreaDriverNameList();
+    setState(() {
+      bussesNumbers = loadedBusses;
+    });
   }
 
   void autoGenerateEmailAndPassword() async {
@@ -70,6 +94,26 @@ class _AddStudentScreenState extends State<AddStudentScreen> {
     setState(() {
       mailController.text = email;
       passwordController.text = password;
+      studentIdController.text = studentId!;
+    });
+  }
+
+  void autoGenerateEmailAndPasswordParent() async {
+    parentId = await ParentService().generateParentId();
+    final firstName = parentFirstNameController.text.trim();
+    final lastName = parentLastNameController.text.trim();
+
+    if (firstName.isEmpty || lastName.isEmpty) return;
+
+    parentId ??= await ParentService().generateParentId();
+    final email =
+        "$firstName$lastName-$parentId@${Constants.schoolName}-parent.com"
+            .toLowerCase();
+    final password = "${firstName.toLowerCase()}${DateTime.now().year}";
+
+    setState(() {
+      parentMailController.text = email;
+      parentPasswordController.text = password;
     });
   }
 
@@ -101,13 +145,16 @@ class _AddStudentScreenState extends State<AddStudentScreen> {
       final lastName = lastNameController.text;
       final address = addressController.text;
       final email = mailController.text.trim();
-      final busNumber = busNumberController.text.trim();
       final password = passwordController.text.trim();
 
       final parentEmail = parentEmailController.text.trim();
       final parentPhone = parentPhoneController.text.trim();
-      final parentFirstName = parentfirstNameController.text;
-      final parentLastName = parentlastNameController.text;
+      final parentFirstName = parentFirstNameController.text;
+      final parentLastName = parentLastNameController.text;
+      final parentMail = parentMailController.text.trim();
+      final parentPassword = parentPasswordController.text.trim();
+
+      String busNumber = selectedBusNumber!.split("-")[0].trim();
 
       if (imageBytes != null && fileName != null) {
         final cloudinaryService = CloudinaryService();
@@ -127,11 +174,23 @@ class _AddStudentScreenState extends State<AddStudentScreen> {
         );
       }
       String gradeId = selectedGrade!.split(" ")[1];
+      String classNumber = selectedClass!.split("class")[1].trim();
+      String classId = "${gradeId}class$classNumber";
+      String? driverId = await DriverService().getDriverIdByBusNumber(
+        busNumber,
+      );
 
-      final gradeRef = FirebaseFirestore.instance
-          .collection('grades')
-          .doc(gradeId);
-      /*
+      final gradeRef = GradeService().getGradeRef(gradeId);
+
+      await ParentService().addParent(
+        parentEmail: parentEmail,
+        parentMail: parentMail,
+        parentName: "$parentFirstName $parentLastName",
+        parentPassword: parentPassword,
+        parentPhone: parentPhone,
+        parentId: parentId!,
+      );
+
       await StudentService().addStudent(
         studentId: studentId!,
         studentName: "$firstName $lastName",
@@ -143,103 +202,30 @@ class _AddStudentScreenState extends State<AddStudentScreen> {
         dateOfBirth: dobTimestamp,
         coverPhoto: imageUrl!,
         comingToday: false,
-        parentRef: parentRef,
-        classRef: classRef,
+        parentRef: ParentService().getParentRef(parentId!),
+        classRef: ClassService().getClassRef(classId),
         gradeRef: gradeRef,
-        driverRef: driverRef,
+        driverRef: DriverService().getDriverRef(driverId!),
       );
-
-      final majorSubjectRef = FirebaseFirestore.instance
-          .collection('subjects')
-          .doc(selectedMajor);
-
-      await TeacherGradeService().addRelation(
-        documentId: "${teacherId}_$gradeId",
-        gradeRef: gradeRef,
-        teacherRef: teacherRef,
-      );
-
-      await TeacherSubjectGradeService().addRelation(
-        documentId: "${teacherId}_${selectedMajor}_$gradeId",
-        isMajor: true,
-        teacherRef: teacherRef,
-        subjectRef: majorSubjectRef,
-        gradeRef: gradeRef,
-      );
-
-      if (selectedSecond != null &&
-          selectedSecond != "" &&
-          selectedSecond != "-") {
-        final secondSubjectRef = FirebaseFirestore.instance
-            .collection('subjects')
-            .doc(selectedSecond);
-        await TeacherSubjectGradeService().addRelation(
-          documentId: "${teacherId}_${selectedSecond}_$gradeId",
-          isMajor: false,
-          teacherRef: teacherRef,
-          subjectRef: secondSubjectRef,
-          gradeRef: gradeRef,
-        );
-      }
-
-      if (selectedGrade2 != null &&
-          selectedGrade2 != "" &&
-          selectedGrade2 != "-") {
-        String gradeId2 = selectedGrade2!.split(" ")[1];
-        final gradeRef2 = FirebaseFirestore.instance
-            .collection('grades')
-            .doc(gradeId2);
-
-        final majorSubjectRef2 = FirebaseFirestore.instance
-            .collection('subjects')
-            .doc(selectedMajor2);
-
-        await TeacherGradeService().addRelation(
-          documentId: "${teacherId}_$gradeId2",
-          gradeRef: gradeRef2,
-          teacherRef: teacherRef,
-        );
-
-        await TeacherSubjectGradeService().addRelation(
-          documentId: "${teacherId}_${selectedMajor2}_$gradeId2",
-          isMajor: true,
-          teacherRef: teacherRef,
-          subjectRef: majorSubjectRef2,
-          gradeRef: gradeRef2,
-        );
-
-        if (selectedSecond2 != null &&
-            selectedSecond2 != "" &&
-            selectedSecond2 != "-") {
-          final secondSubjectRef2 = FirebaseFirestore.instance
-              .collection('subjects')
-              .doc(selectedSecond2);
-          await TeacherSubjectGradeService().addRelation(
-            documentId: "${teacherId}_${selectedSecond2}_$gradeId2",
-            isMajor: false,
-            teacherRef: teacherRef,
-            subjectRef: secondSubjectRef2,
-            gradeRef: gradeRef2,
-          );
-        }'
-      }*/
 
       if (!mounted) return;
       ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text("Teacher added successfully.")),
+        const SnackBar(content: Text("Student added successfully.")),
       );
-      /*Navigator.pushReplacement(
+      Navigator.pushReplacement(
         context,
         MaterialPageRoute(
           builder:
               (context) =>
-                  HomeScreen(subScreen: TeachersScreen(), selectedIndex: 3),
+                  HomeScreen(subScreen: StudentsScreen(), selectedIndex: 2),
         ),
-      );*/
+      );
     } catch (e) {
       setState(() {
         errorMessage = "Error: ${e.toString()}";
+        print(e);
       });
+      rethrow;
     } finally {
       setState(() {
         isSaving = false;
@@ -251,205 +237,272 @@ class _AddStudentScreenState extends State<AddStudentScreen> {
   Widget build(BuildContext context) {
     return Padding(
       padding: const EdgeInsets.all(Constants.pagePadding),
-      child: SingleChildScrollView(
-        child: Column(
-          children: [
-            HeaderWidget(headerTitle: "Add New Student"),
-            const SizedBox(height: Constants.internalSpacing),
-            WhiteContainer(
-              padding: const EdgeInsets.all(24),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Text("Student Details", style: Constants.subHeadingStyle),
-                  const SizedBox(height: 24),
-                  Row(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      // Student Photo
-                      /*ReusablePhotoUpload(
-                        headline: "Photo",
-                        imagePath:
-                            "assets/images/Person.png", // Replace with actual path
-                        onChoose: () {},
-                        onRemove: () {},
-                      ),*/
-                      const SizedBox(width: 40),
+      child: Align(
+        alignment: Alignment.topLeft,
+        child: SingleChildScrollView(
+          child: Column(
+            children: [
+              HeaderWidget(headerTitle: "Add New Student"),
+              const SizedBox(height: Constants.internalSpacing),
+              WhiteContainer(
+                padding: const EdgeInsets.all(24),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text("Student Details", style: Constants.subHeadingStyle),
+                    const SizedBox(height: 24),
+                    Row(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        ReusablePhotoUpload(
+                          headline: "Photo",
+                          imagePath:
+                              "assets/images/Person.png", // Replace with actual path
+                          onImageSelected: onPhotoSelected,
+                          onImageRemoved: onPhotoRemoved,
+                          initialImageBytes: imageBytes,
+                        ),
+                        const SizedBox(width: 40),
 
-                      // Form Fields in Two-Per-Row Layout
-                      Expanded(
-                        child: Column(
+                        // Form Fields in Two-Per-Row Layout
+                        Expanded(
+                          child: Column(
+                            children: [
+                              Row(
+                                children: [
+                                  Expanded(
+                                    child: ReusableTextField(
+                                      headline: "First Name",
+                                      hintText: "Tony",
+                                      controller: firstNameController,
+                                    ),
+                                  ),
+                                  const SizedBox(width: 20),
+                                  Expanded(
+                                    child: ReusableTextField(
+                                      headline: "Last Name",
+                                      hintText: "Stark",
+                                      controller: lastNameController,
+                                    ),
+                                  ),
+                                ],
+                              ),
+                              const SizedBox(height: 20),
+                              Row(
+                                children: [
+                                  Expanded(
+                                    child: ReusableTextField(
+                                      headline: "Date of Birth",
+                                      hintText: "17/3/2007",
+                                      inputType: TextInputType.datetime,
+                                      controller: dobController,
+                                    ),
+                                  ),
+                                  const SizedBox(width: 20),
+                                  Expanded(
+                                    child: ReusableTextField(
+                                      headline: "Address",
+                                      hintText: "7 Del Perro Heights",
+                                      controller: addressController,
+                                    ),
+                                  ),
+                                ],
+                              ),
+                              const SizedBox(height: 20),
+                              Row(
+                                children: [
+                                  Expanded(
+                                    child: ReusableComboBox<String>(
+                                      headline: "Grade",
+                                      items: const [
+                                        "Grade 1",
+                                        "Grade 2",
+                                        "Grade 3",
+                                        "Grade 4",
+                                        "Grade 5",
+                                        "Grade 6",
+                                        "Grade 7",
+                                        "Grade 8",
+                                        "Grade 9",
+                                        "Grade 10",
+                                        "Grade 11",
+                                        "Grade 12",
+                                      ],
+                                      selectedItem: selectedGrade,
+                                      itemLabel: (item) => item,
+                                      onChanged: (value) async {
+                                        filteredclasses = [];
+                                        selectedGrade = value;
+                                        filteredclasses = await ClassService()
+                                            .getClassIdsByGradeNumber(
+                                              selectedGrade!.split(" ")[1],
+                                            );
+                                        setState(() {});
+                                      },
+                                    ),
+                                  ),
+                                  const SizedBox(width: 20),
+                                  Expanded(
+                                    child: ReusableComboBox<String>(
+                                      headline: "Class",
+                                      items: filteredclasses,
+                                      selectedItem: selectedClass,
+                                      itemLabel: (item) => item,
+                                      onChanged: (value) {
+                                        setState(() => selectedClass = value);
+                                      },
+                                    ),
+                                  ),
+                                ],
+                              ),
+                              const SizedBox(height: 20),
+                              Row(
+                                children: [
+                                  Expanded(
+                                    child: ReusableComboBox<String>(
+                                      headline: "Bus Data",
+                                      items: bussesNumbers,
+                                      selectedItem: selectedBusNumber,
+                                      itemLabel: (item) => item,
+                                      onChanged: (value) {
+                                        setState(
+                                          () => selectedBusNumber = value,
+                                        );
+                                      },
+                                    ),
+                                  ),
+                                  const SizedBox(width: 20),
+                                  Expanded(
+                                    child: ReusableTextField(
+                                      headline: "Student ID",
+                                      hintText: "123456789",
+                                      inputType: TextInputType.number,
+                                      controller: studentIdController,
+                                    ),
+                                  ),
+                                ],
+                              ),
+                              const SizedBox(height: 20),
+                              Row(
+                                children: [
+                                  Expanded(
+                                    child: ReusableTextField(
+                                      headline: "Student Email",
+                                      hintText: "Tony3000@school.com",
+                                      inputType: TextInputType.emailAddress,
+                                      controller: mailController,
+                                    ),
+                                  ),
+                                  const SizedBox(width: 20),
+                                  Expanded(
+                                    child: ReusableTextField(
+                                      headline: "Student Password",
+                                      hintText: "ynzmj26",
+                                      controller: passwordController,
+                                    ),
+                                  ),
+                                ],
+                              ),
+                            ],
+                          ),
+                        ),
+                      ],
+                    ),
+                  ],
+                ),
+              ),
+              SizedBox(height: Constants.internalSpacing),
+              WhiteContainer(
+                padding: const EdgeInsets.all(24),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text("Parent Details", style: Constants.subHeadingStyle),
+                    const SizedBox(height: 24),
+                    Column(
+                      children: [
+                        Row(
                           children: [
-                            Row(
-                              children: [
-                                Expanded(
-                                  child: ReusableTextField(
-                                    headline: "First Name",
-                                    hintText: "Tony",
-                                  ),
-                                ),
-                                const SizedBox(width: 20),
-                                Expanded(
-                                  child: ReusableTextField(
-                                    headline: "Last Name",
-                                    hintText: "Stark",
-                                  ),
-                                ),
-                              ],
+                            Expanded(
+                              child: ReusableTextField(
+                                headline: "First Name",
+                                hintText: "Howard",
+                                controller: parentFirstNameController,
+                              ),
                             ),
-                            const SizedBox(height: 20),
-                            Row(
-                              children: [
-                                Expanded(
-                                  child: ReusableTextField(
-                                    headline: "Date of Birth",
-                                    hintText: "17/3/2007",
-                                    inputType: TextInputType.datetime,
-                                  ),
-                                ),
-                                const SizedBox(width: 20),
-                                Expanded(
-                                  child: ReusableTextField(
-                                    headline: "Adress",
-                                    hintText: "7 Del Perro Heights",
-                                  ),
-                                ),
-                              ],
-                            ),
-                            const SizedBox(height: 20),
-                            Row(
-                              children: [
-                                Expanded(
-                                  child: ReusableTextField(
-                                    headline: "Grade",
-                                    hintText: "12",
-                                    inputType: TextInputType.number,
-                                  ),
-                                ),
-                                const SizedBox(width: 20),
-                                Expanded(
-                                  child: ReusableComboBox<String>(
-                                    headline: "Class",
-                                    items: const [
-                                      "12/1 - Paris",
-                                      "12/2 - Cairo",
-                                    ],
-                                    selectedItem: "12/1 - Paris",
-                                    itemLabel: (item) => item,
-                                    onChanged: (value) {},
-                                  ),
-                                ),
-                              ],
-                            ),
-                            const SizedBox(height: 20),
-                            Row(
-                              children: [
-                                Expanded(
-                                  child: ReusableTextField(
-                                    headline: "National ID",
-                                    hintText: "30312190300111",
-                                    inputType: TextInputType.number,
-                                  ),
-                                ),
-                                const SizedBox(width: 20),
-                                Expanded(
-                                  child: ReusableTextField(
-                                    headline: "Student ID",
-                                    hintText: "123456789",
-                                    inputType: TextInputType.number,
-                                  ),
-                                ),
-                              ],
-                            ),
-                            const SizedBox(height: 20),
-                            Row(
-                              children: [
-                                Expanded(
-                                  child: ReusableTextField(
-                                    headline: "Student Email",
-                                    hintText: "Tony3000@school.com",
-                                    inputType: TextInputType.emailAddress,
-                                  ),
-                                ),
-                                const SizedBox(width: 20),
-                                Expanded(
-                                  child: ReusableTextField(
-                                    headline: "Student Password",
-                                    hintText: "ynzmj26",
-                                  ),
-                                ),
-                              ],
+                            const SizedBox(width: 20),
+                            Expanded(
+                              child: ReusableTextField(
+                                headline: "Last Name",
+                                hintText: "Stark",
+                                controller: parentLastNameController,
+                              ),
                             ),
                           ],
                         ),
-                      ),
-                    ],
-                  ),
-                ],
-              ),
-            ),
-            SizedBox(height: Constants.internalSpacing),
-            WhiteContainer(
-              padding: const EdgeInsets.all(24),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Text("Parent Details", style: Constants.subHeadingStyle),
-                  const SizedBox(height: 24),
-                  Column(
-                    children: [
-                      Row(
-                        children: [
-                          Expanded(
-                            child: ReusableTextField(
-                              headline: "First Name",
-                              hintText: "Howard",
+                        const SizedBox(height: 20),
+                        Row(
+                          children: [
+                            Expanded(
+                              child: ReusableTextField(
+                                headline: "Email",
+                                hintText: "Howard@shield.com",
+                                inputType: TextInputType.emailAddress,
+                                controller: parentEmailController,
+                              ),
                             ),
-                          ),
-                          const SizedBox(width: 20),
-                          Expanded(
-                            child: ReusableTextField(
-                              headline: "Last Name",
-                              hintText: "Stark",
+                            const SizedBox(width: 20),
+                            Expanded(
+                              child: ReusableTextField(
+                                headline: "Phone Number",
+                                hintText: "04071970",
+                                inputType: TextInputType.phone,
+                                controller: parentPhoneController,
+                              ),
                             ),
-                          ),
-                        ],
-                      ),
-                      const SizedBox(height: 20),
-                      Row(
-                        children: [
-                          Expanded(
-                            child: ReusableTextField(
-                              headline: "Email",
-                              hintText: "Howard@shield.com",
-                              inputType: TextInputType.emailAddress,
+                          ],
+                        ),
+                        Row(
+                          children: [
+                            Expanded(
+                              child: ReusableTextField(
+                                headline: "Parent Mail",
+                                hintText: "Howard@edutrack-parent.com",
+                                inputType: TextInputType.emailAddress,
+                                controller: parentMailController,
+                              ),
                             ),
-                          ),
-                          const SizedBox(width: 20),
-                          Expanded(
-                            child: ReusableTextField(
-                              headline: "Phone Number",
-                              hintText: "04071970",
-                              inputType: TextInputType.phone,
+                            const SizedBox(width: 20),
+                            Expanded(
+                              child: ReusableTextField(
+                                headline: "Password",
+                                hintText: "howard2025",
+                                inputType: TextInputType.text,
+                                controller: parentPasswordController,
+                              ),
                             ),
-                          ),
-                        ],
-                      ),
-                    ],
-                  ),
-                  const SizedBox(height: 30),
-                  Align(
-                    alignment: Alignment.centerRight,
-                    child: CustomButton(
-                      text: "Save Student",
-                      onTap: () {},
-                      hasIcon: false,
+                          ],
+                        ),
+                      ],
                     ),
-                  ),
-                ],
+                    const SizedBox(height: 30),
+                    if (errorMessage != null)
+                      Text(errorMessage!, style: TextStyle(color: Colors.red)),
+                    const SizedBox(height: 10),
+                    Align(
+                      alignment: Alignment.centerRight,
+                      child: CustomButton(
+                        text:
+                            isSaving ? "Saving..." : "Save Student and Parent",
+                        onTap: isSaving ? null : saveStudent,
+                        hasIcon: false,
+                      ),
+                    ),
+                  ],
+                ),
               ),
-            ),
-          ],
+            ],
+          ),
         ),
       ),
     );
