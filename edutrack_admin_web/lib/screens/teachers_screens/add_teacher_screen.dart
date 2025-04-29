@@ -352,7 +352,11 @@ class _AddTeacherScreenState extends State<AddTeacherScreen> {
                                               in subjectsDocuments) {
                                             if (subject["subjectId"]
                                                     .toString()
-                                                    .split("_")[0] ==
+                                                    .split(
+                                                      subject["subjectName"]
+                                                          .toString()
+                                                          .toLowerCase(),
+                                                    )[0] ==
                                                 selectedGrade!.split(" ")[1]) {
                                               filteredSubjects.add(
                                                 subject["subjectId"],
@@ -428,7 +432,11 @@ class _AddTeacherScreenState extends State<AddTeacherScreen> {
                                               in subjectsDocuments) {
                                             if (subject["subjectId"]
                                                     .toString()
-                                                    .split("_")[0] ==
+                                                    .split(
+                                                      subject["subjectName"]
+                                                          .toString()
+                                                          .toLowerCase(),
+                                                    )[0] ==
                                                 selectedGrade2!.split(" ")[1]) {
                                               filteredSubjects2.add(
                                                 subject["subjectId"],

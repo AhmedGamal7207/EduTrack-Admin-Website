@@ -29,7 +29,7 @@ class ScheduleScreen extends StatelessWidget {
                     12,
                     (index) => ClickableCard(
                       cardTitle: "Grade ${index + 1}",
-                      buttonText: "Edit Schedules",
+                      buttonText: "Show Classes",
                       onTap: () {
                         Navigator.push(
                           context,

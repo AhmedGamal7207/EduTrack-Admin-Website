@@ -113,21 +113,21 @@ class _InventoryScreenState extends State<InventoryScreen> {
 
   @override
   Widget build(BuildContext context) {
-    return Align(
-      alignment: Alignment.topLeft,
-      child: Padding(
-        padding: const EdgeInsets.all(Constants.pagePadding),
-        child: SingleChildScrollView(
-          child:
-              isLoading
-                  ? Center(
-                    child: Lottie.asset(
-                      Constants.pageLoadingPath,
-                      width: 450,
-                      height: 450,
-                    ),
-                  )
-                  : Column(
+    return Padding(
+      padding: const EdgeInsets.all(Constants.pagePadding),
+      child:
+          isLoading
+              ? Center(
+                child: Lottie.asset(
+                  Constants.pageLoadingPath,
+                  width: 450,
+                  height: 450,
+                ),
+              )
+              : Align(
+                alignment: Alignment.topLeft,
+                child: SingleChildScrollView(
+                  child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       HeaderWidget(headerTitle: "Inventory"),
@@ -260,8 +260,8 @@ class _InventoryScreenState extends State<InventoryScreen> {
                       ),
                     ],
                   ),
-        ),
-      ),
+                ),
+              ),
     );
   }
 }
