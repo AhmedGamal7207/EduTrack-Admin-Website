@@ -1,3 +1,4 @@
+import 'package:edutrack_admin_web/services/relations/teacher_subject_grade_service.dart';
 import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:edutrack_admin_web/constants/constants.dart';
@@ -33,10 +34,13 @@ class _ClassSchedulePageState extends State<ClassSchedulePage> {
   final SubjectService _subjectService = SubjectService();
   final TeacherService _teacherService = TeacherService();
   final ClassService _classService = ClassService();
+  final TeacherSubjectGradeService _teacherSubjectGradeService =
+      TeacherSubjectGradeService(); // Add the new service
 
   // Data
   late String classId;
   late DocumentReference classRef;
+  late DocumentReference gradeRef;
   List<Map<String, dynamic>> subjects = [];
   List<Map<String, dynamic>> teachers = [];
   Map<String, List<String>> subjectTeachersMap = {};
@@ -47,6 +51,7 @@ class _ClassSchedulePageState extends State<ClassSchedulePage> {
 
   bool isLoading = true;
   bool isSaving = false;
+  bool isSaved = false;
   bool _hasChanges = false;
 
   @override
@@ -54,6 +59,9 @@ class _ClassSchedulePageState extends State<ClassSchedulePage> {
     super.initState();
     classId = "${widget.gradeNumber}class${widget.classNumber}";
     classRef = _classService.getClassRef(classId);
+    gradeRef = FirebaseFirestore.instance
+        .collection('grades')
+        .doc('grade${widget.gradeNumber}');
 
     // Initialize empty schedule data
     scheduleData = List.generate(
@@ -133,24 +141,71 @@ class _ClassSchedulePageState extends State<ClassSchedulePage> {
     }
   }
 
-  // Map subjects to their teachers (this would typically be based on some relationship in your data)
-  // For now, we'll assume all teachers can teach all subjects
+  // Map subjects to their teachers based on the teacher_subject_grade collection
   Future<void> _mapSubjectTeachers() async {
     try {
-      // This is a placeholder implementation
-      // In a real app, you would have a way to determine which teachers teach which subjects
+      // Get all teacher-subject-grade relations
+      List<Map<String, dynamic>> allRelations =
+          await _teacherSubjectGradeService.getAllRelations();
 
+      // Initialize the map
+      for (var subject in subjects) {
+        subjectTeachersMap[subject['subjectId']] = [];
+      }
+
+      // Process each relation to build the map
+      for (var relation in allRelations) {
+        try {
+          // Get the grade reference from the relation
+          DocumentReference relationGradeRef = relation['gradeRef'];
+          DocumentSnapshot gradeSnapshot = await relationGradeRef.get();
+
+          // Check if this relation is for our current grade
+          if (gradeSnapshot.exists) {
+            Map<String, dynamic> gradeData =
+                gradeSnapshot.data() as Map<String, dynamic>;
+            if (gradeData['gradeNumber'] == widget.gradeNumber) {
+              // Get the subject reference from the relation
+              DocumentReference subjectRef = relation['subjectRef'];
+              DocumentSnapshot subjectSnapshot = await subjectRef.get();
+
+              if (subjectSnapshot.exists) {
+                Map<String, dynamic> subjectData =
+                    subjectSnapshot.data() as Map<String, dynamic>;
+                String subjectId = subjectData['subjectId'];
+
+                // Get the teacher reference from the relation
+                DocumentReference teacherRef = relation['teacherRef'];
+                DocumentSnapshot teacherSnapshot = await teacherRef.get();
+
+                if (teacherSnapshot.exists) {
+                  Map<String, dynamic> teacherData =
+                      teacherSnapshot.data() as Map<String, dynamic>;
+                  String teacherId = teacherData['teacherId'];
+
+                  // Add this teacher to the list of teachers for this subject
+                  if (!subjectTeachersMap.containsKey(subjectId)) {
+                    subjectTeachersMap[subjectId] = [];
+                  }
+
+                  if (!subjectTeachersMap[subjectId]!.contains(teacherId)) {
+                    subjectTeachersMap[subjectId]!.add(teacherId);
+                  }
+                }
+              }
+            }
+          }
+        } catch (e) {
+          print('Error processing relation: $e');
+        }
+      }
+
+      // If no teachers are found for a subject, initialize with empty list
       for (var subject in subjects) {
         String subjectId = subject['subjectId'];
-        List<String> teacherIds = [];
-
-        // For now, add all teachers to each subject
-        // In a real implementation, you would filter teachers based on which ones teach this subject
-        for (var teacher in teachers) {
-          teacherIds.add(teacher['teacherId']);
+        if (!subjectTeachersMap.containsKey(subjectId)) {
+          subjectTeachersMap[subjectId] = [];
         }
-
-        subjectTeachersMap[subjectId] = teacherIds;
       }
     } catch (e) {
       print('Error mapping subjects to teachers: $e');
@@ -272,6 +327,7 @@ class _ClassSchedulePageState extends State<ClassSchedulePage> {
       ScaffoldMessenger.of(context).showSnackBar(
         const SnackBar(content: Text('Schedule saved successfully')),
       );
+      isSaved = true;
 
       setState(() {
         _hasChanges = false;
@@ -289,14 +345,14 @@ class _ClassSchedulePageState extends State<ClassSchedulePage> {
   }
 
   // Get subject name by ID
-  /*String _getSubjectName(String subjectId) {
+  String _getSubjectName(String subjectId) {
     for (var subject in subjects) {
       if (subject['subjectId'] == subjectId) {
         return subject['subjectName'];
       }
     }
     return '';
-  }*/
+  }
 
   // Get teacher name by ID
   String _getTeacherName(String teacherId) {
@@ -332,7 +388,7 @@ class _ClassSchedulePageState extends State<ClassSchedulePage> {
                   children: [
                     HeaderWidget(
                       headerTitle:
-                          'Class ${widget.classNumber}/${widget.gradeNumber} Schedule',
+                          'Class ${widget.classNumber}/${widget.gradeNumber} Schedule${isSaved ? "- Saved" : ""}',
                     ),
                     const SizedBox(height: Constants.internalSpacing),
                     Expanded(
@@ -464,6 +520,32 @@ class _ClassSchedulePageState extends State<ClassSchedulePage> {
             ? []
             : _getTeachersForSubject(currentSubjectId);
 
+    // Filter teachers list to only include those who teach this subject in this grade
+    List<DropdownMenuItem<String>> teacherItems = [];
+
+    if (currentSubjectId.isNotEmpty) {
+      // Add "None" option
+      teacherItems.add(
+        const DropdownMenuItem<String>(
+          value: '',
+          child: Text('None', style: TextStyle(fontSize: 13)),
+        ),
+      );
+
+      // Add filtered teachers
+      for (String teacherId in availableTeacherIds) {
+        teacherItems.add(
+          DropdownMenuItem<String>(
+            value: teacherId,
+            child: Text(
+              _getTeacherName(teacherId),
+              style: const TextStyle(fontSize: 13),
+            ),
+          ),
+        );
+      }
+    }
+
     return Container(
       decoration: BoxDecoration(
         color: Colors.white,
@@ -476,26 +558,7 @@ class _ClassSchedulePageState extends State<ClassSchedulePage> {
           isExpanded: true,
           value: currentTeacherId.isEmpty ? null : currentTeacherId,
           hint: const Text('Teacher', style: TextStyle(fontSize: 13)),
-          items:
-              currentSubjectId.isEmpty
-                  ? []
-                  : [
-                    // Empty option for clearing selection
-                    const DropdownMenuItem<String>(
-                      value: '',
-                      child: Text('None', style: TextStyle(fontSize: 13)),
-                    ),
-                    // Teacher options for this subject
-                    ...availableTeacherIds.map(
-                      (teacherId) => DropdownMenuItem<String>(
-                        value: teacherId,
-                        child: Text(
-                          _getTeacherName(teacherId),
-                          style: const TextStyle(fontSize: 13),
-                        ),
-                      ),
-                    ),
-                  ],
+          items: teacherItems,
           onChanged:
               currentSubjectId.isEmpty
                   ? null

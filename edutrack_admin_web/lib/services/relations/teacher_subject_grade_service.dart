@@ -1,7 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 
 class TeacherSubjectGradeService {
-  //final FirebaseFirestore _firestore = FirebaseFirestore.instance;
   final CollectionReference _ref = FirebaseFirestore.instance.collection(
     'teacher_subject_grade',
   );
@@ -64,6 +63,66 @@ class TeacherSubjectGradeService {
       return snapshot.docs
           .map((doc) => doc.data() as Map<String, dynamic>)
           .toList();
+    } catch (e) {
+      rethrow;
+    }
+  }
+
+  /// Get relations by grade
+  Future<List<Map<String, dynamic>>> getRelationsByGrade(
+    DocumentReference gradeRef,
+  ) async {
+    try {
+      QuerySnapshot snapshot =
+          await _ref.where('gradeRef', isEqualTo: gradeRef).get();
+
+      return snapshot.docs
+          .map((doc) => doc.data() as Map<String, dynamic>)
+          .toList();
+    } catch (e) {
+      rethrow;
+    }
+  }
+
+  /// Get relations by subject and grade
+  Future<List<Map<String, dynamic>>> getRelationsBySubjectAndGrade(
+    DocumentReference subjectRef,
+    DocumentReference gradeRef,
+  ) async {
+    try {
+      QuerySnapshot snapshot =
+          await _ref
+              .where('subjectRef', isEqualTo: subjectRef)
+              .where('gradeRef', isEqualTo: gradeRef)
+              .get();
+
+      return snapshot.docs
+          .map((doc) => doc.data() as Map<String, dynamic>)
+          .toList();
+    } catch (e) {
+      rethrow;
+    }
+  }
+
+  /// Get teachers for a specific subject and grade
+  Future<List<DocumentReference>> getTeachersForSubjectAndGrade(
+    DocumentReference subjectRef,
+    DocumentReference gradeRef,
+  ) async {
+    try {
+      QuerySnapshot snapshot =
+          await _ref
+              .where('subjectRef', isEqualTo: subjectRef)
+              .where('gradeRef', isEqualTo: gradeRef)
+              .get();
+
+      List<DocumentReference> teacherRefs = [];
+      for (var doc in snapshot.docs) {
+        Map<String, dynamic> data = doc.data() as Map<String, dynamic>;
+        teacherRefs.add(data['teacherRef'] as DocumentReference);
+      }
+
+      return teacherRefs;
     } catch (e) {
       rethrow;
     }

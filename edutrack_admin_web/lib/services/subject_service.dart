@@ -99,4 +99,8 @@ class SubjectService {
       return null;
     }
   }
+
+  DocumentReference<Map<String, dynamic>> getSubjectRef(String subjectId) {
+    return FirebaseFirestore.instance.collection("subjects").doc(subjectId);
+  }
 }
