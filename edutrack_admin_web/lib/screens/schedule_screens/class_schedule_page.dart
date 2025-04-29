@@ -52,6 +52,7 @@ class _ClassSchedulePageState extends State<ClassSchedulePage> {
   bool isLoading = true;
   bool isSaving = false;
   bool isSaved = false;
+  // ignore: unused_field
   bool _hasChanges = false;
 
   @override
@@ -345,14 +346,14 @@ class _ClassSchedulePageState extends State<ClassSchedulePage> {
   }
 
   // Get subject name by ID
-  String _getSubjectName(String subjectId) {
+  /*String _getSubjectName(String subjectId) {
     for (var subject in subjects) {
       if (subject['subjectId'] == subjectId) {
         return subject['subjectName'];
       }
     }
     return '';
-  }
+  }*/
 
   // Get teacher name by ID
   String _getTeacherName(String teacherId) {
