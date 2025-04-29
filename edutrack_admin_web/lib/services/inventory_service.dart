@@ -65,4 +65,69 @@ class InventoryService {
       rethrow;
     }
   }
+
+  /// Get all inventory elements for a specific classId
+  Future<List<Map<String, dynamic>>> getInventoryByClassId(
+    String classId,
+  ) async {
+    try {
+      QuerySnapshot snapshot = await _inventoryRef.get();
+      List<Map<String, dynamic>> filteredInventory = [];
+
+      for (var doc in snapshot.docs) {
+        if (doc.id.startsWith(classId)) {
+          filteredInventory.add(doc.data() as Map<String, dynamic>);
+        }
+      }
+
+      return filteredInventory;
+    } catch (e) {
+      rethrow;
+    }
+  }
+
+  /// Get total number of missing markers
+  Future<int> getTotalMissingMarkers() async {
+    try {
+      QuerySnapshot snapshot =
+          await _inventoryRef
+              .where('elementName', isEqualTo: 'Marker')
+              .where('elementStatus', isEqualTo: 'Missing')
+              .get();
+
+      return snapshot.size;
+    } catch (e) {
+      rethrow;
+    }
+  }
+
+  /// Get total number of missing erasers
+  Future<int> getTotalMissingErasers() async {
+    try {
+      QuerySnapshot snapshot =
+          await _inventoryRef
+              .where('elementName', isEqualTo: 'Eraser')
+              .where('elementStatus', isEqualTo: 'Missing')
+              .get();
+
+      return snapshot.size;
+    } catch (e) {
+      rethrow;
+    }
+  }
+
+  /// Get total number of missing first aid kits
+  Future<int> getTotalMissingKits() async {
+    try {
+      QuerySnapshot snapshot =
+          await _inventoryRef
+              .where('elementName', isEqualTo: 'First Aid Kit')
+              .where('elementStatus', isEqualTo: 'Missing')
+              .get();
+
+      return snapshot.size;
+    } catch (e) {
+      rethrow;
+    }
+  }
 }

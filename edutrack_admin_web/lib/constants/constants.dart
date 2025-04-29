@@ -151,6 +151,7 @@ class Constants {
   static const tableLoadingPath = 'assets/lotties/student_loading.json';
   static const statsLoadingPath = 'assets/lotties/student_loading.json';
   static const photoLoadingPath = 'assets/lotties/student_loading.json';
+  static const pageLoadingPath = 'assets/lotties/student_loading.json';
 
   static const schoolName = "EduTrack";
 }

@@ -5,6 +5,7 @@ import 'package:edutrack_admin_web/models/stats_model.dart';
 import 'package:edutrack_admin_web/screens/home_screen.dart';
 import 'package:edutrack_admin_web/screens/students_screens/student_screen.dart';
 import 'package:edutrack_admin_web/services/class_service.dart';
+import 'package:edutrack_admin_web/services/inventory_service.dart';
 import 'package:edutrack_admin_web/services/subject_service.dart';
 import 'package:edutrack_admin_web/services/teacher_service.dart';
 import 'package:edutrack_admin_web/widgets/graphs_and_tables/table_with_date.dart';
@@ -32,6 +33,7 @@ class _ClassScreenState extends State<ClassScreen> {
   bool isLoading = true;
   List<StatsModel> groupedStats = [];
   String? photoLink;
+  List<Map<String, dynamic>> inventoryItems = [];
 
   @override
   void initState() {
@@ -60,6 +62,14 @@ class _ClassScreenState extends State<ClassScreen> {
               : await TeacherService().getTeacherByRef(
                 doc["currentTeacherRef"],
               );
+
+      List<Map<String, dynamic>> classInventory = await InventoryService()
+          .getInventoryByClassId(doc['classId']);
+
+      for (var item in classInventory) {
+        print(item['elementName']); // Eraser, Marker, Kit...
+      }
+
       if (doc.isNotEmpty) {
         setState(() {
           photoLink = doc['coverPhoto'].toString();
@@ -95,6 +105,7 @@ class _ClassScreenState extends State<ClassScreen> {
               color: Constants.blueColor,
             ),
           ];
+          inventoryItems = classInventory;
           isLoading = false;
         });
       } else {
@@ -119,7 +130,13 @@ class _ClassScreenState extends State<ClassScreen> {
         child: SingleChildScrollView(
           child:
               isLoading
-                  ? Lottie.asset(Constants.statsLoadingPath, height: 200)
+                  ? Center(
+                    child: Lottie.asset(
+                      Constants.pageLoadingPath,
+                      width: 450,
+                      height: 450,
+                    ),
+                  )
                   : Column(
                     children: [
                       HeaderWidget(
@@ -211,22 +228,18 @@ class _ClassScreenState extends State<ClassScreen> {
                             SizedBox(height: Constants.internalSpacing),
                             Row(
                               children: [
-                                Spacer(),
-                                InventoryElement(
-                                  inventoryTitle: "Marker",
-                                  inventoryStatus: "Available",
+                                const Spacer(),
+                                ...inventoryItems.expand(
+                                  (item) => [
+                                    InventoryElement(
+                                      inventoryTitle:
+                                          item['elementName'] ?? '-',
+                                      inventoryStatus:
+                                          item['elementStatus'] ?? '-',
+                                    ),
+                                    const Spacer(),
+                                  ],
                                 ),
-                                Spacer(),
-                                InventoryElement(
-                                  inventoryTitle: "Eraser",
-                                  inventoryStatus: "In Use",
-                                ),
-                                Spacer(),
-                                InventoryElement(
-                                  inventoryTitle: "First Aid Kit",
-                                  inventoryStatus: "Missing",
-                                ),
-                                Spacer(),
                               ],
                             ),
                           ],

@@ -29,8 +29,14 @@ class InventoryElement extends StatelessWidget {
     }
     return Column(
       children: [
-        Image.asset("assets/images/$inventoryTitle.png"),
+        Image.asset(
+          "assets/images/$inventoryTitle.png",
+          width: 160,
+          height: 160,
+        ),
+
         Text(inventoryTitle, style: Constants.inventoryTitleStyle),
+        SizedBox(height: 10),
         InventoryStatusCard(text: inventoryStatus, bgColor: bgColor),
       ],
     );

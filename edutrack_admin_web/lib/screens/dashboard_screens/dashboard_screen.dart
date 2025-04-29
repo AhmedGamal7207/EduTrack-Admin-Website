@@ -142,7 +142,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
                   isLoading
                       ? Center(
                         child: Lottie.asset(
-                          'assets/lotties/student_loading.json',
+                          Constants.pageLoadingPath,
                           width: 450,
                           height: 450,
                         ),

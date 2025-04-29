@@ -1,7 +1,10 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:edutrack_admin_web/constants/constants.dart';
+import 'package:edutrack_admin_web/screens/classes_screens/grade_classes_screen.dart';
+import 'package:edutrack_admin_web/screens/home_screen.dart';
 import 'package:edutrack_admin_web/services/class_service.dart';
 import 'package:edutrack_admin_web/services/cloudinary_service.dart';
+import 'package:edutrack_admin_web/services/inventory_service.dart';
 import 'package:edutrack_admin_web/widgets/add_data_widgets/photo_upload_widget.dart';
 import 'package:edutrack_admin_web/widgets/add_data_widgets/text_field_widget.dart';
 import 'package:edutrack_admin_web/widgets/buttons/custom_button_widget.dart';
@@ -96,11 +99,39 @@ class _AddClassScreenState extends State<AddClassScreen> {
         gradeRef: gradeRef,
       );
 
+      await InventoryService().addInventory(
+        inventoryId: "${classId}_marker",
+        elementName: "Marker",
+        elementStatus: "Available",
+        classRef: ClassService().getClassRef(classId),
+      );
+      await InventoryService().addInventory(
+        inventoryId: "${classId}_eraser",
+        elementName: "Eraser",
+        elementStatus: "Available",
+        classRef: ClassService().getClassRef(classId),
+      );
+      await InventoryService().addInventory(
+        inventoryId: "${classId}_kit",
+        elementName: "First Aid Kit",
+        elementStatus: "Available",
+        classRef: ClassService().getClassRef(classId),
+      );
+
       if (!mounted) return;
       ScaffoldMessenger.of(context).showSnackBar(
         const SnackBar(content: Text("Class added successfully.")),
       );
-      Navigator.pop(context);
+      Navigator.push(
+        context,
+        MaterialPageRoute(
+          builder:
+              (context) => HomeScreen(
+                subScreen: GradeClassesScreen(gradeNumber: widget.gradeNumber),
+                selectedIndex: 1,
+              ),
+        ),
+      );
     } catch (e) {
       setState(() {
         errorMessage = "Error: ${e.toString()}";
