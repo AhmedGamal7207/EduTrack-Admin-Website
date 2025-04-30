@@ -221,8 +221,9 @@ class _InventoryScreenState extends State<InventoryScreen> {
                                           .toList()
                                       : items;
 
-                              if (filteredItems.isEmpty)
+                              if (filteredItems.isEmpty) {
                                 return const SizedBox();
+                              }
 
                               return Padding(
                                 padding: const EdgeInsets.symmetric(

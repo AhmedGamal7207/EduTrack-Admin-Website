@@ -4,6 +4,7 @@ import 'package:edutrack_admin_web/screens/chatbots_screens/chatbots_screen.dart
 import 'package:edutrack_admin_web/screens/home_screen.dart';
 import 'package:edutrack_admin_web/services/chatbot_service.dart';
 import 'package:edutrack_admin_web/services/cloudinary_service.dart';
+import 'package:edutrack_admin_web/services/generative_chatbots.dart';
 import 'package:edutrack_admin_web/services/relations/chatbot_subject_service.dart';
 import 'package:edutrack_admin_web/widgets/add_data_widgets/long_text_field_widget.dart';
 import 'package:edutrack_admin_web/widgets/add_data_widgets/photo_upload_widget.dart';
@@ -236,6 +237,11 @@ class _AddChatbotScreenState extends State<AddChatbotScreen> {
         chatbotRef: chatbotRef,
         subjectRef: subjectRef,
         pdfs: pdfUrls,
+      );
+
+      await GenerativeChatbots().generateChatbot(
+        "${chatbotId}_${subjectId}_$gradeId",
+        pdfUrls,
       );
 
       if (!mounted) return;
